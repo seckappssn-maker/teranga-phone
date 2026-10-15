@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teranga Phone</title>
+<meta name="description" content="Réparations, stock, ventes et caisse pour les réparateurs et vendeurs de téléphones. Devis et suivi en ligne pour les clients.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seckappssn-maker.github.io/teranga-phone/">
+<meta property="og:title" content="Teranga Phone">
+<meta property="og:description" content="Réparation · Vente · Suivi — devis, suivi de réparation et téléphones en vente.">
+<meta property="og:image" content="https://seckappssn-maker.github.io/teranga-phone/cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://seckappssn-maker.github.io/teranga-phone/cover.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Teranga Phone">
+<meta name="theme-color" content="#0D1F2D">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<script>window.TP_ONLINE=true;</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js';document.head.appendChild(s)"></script>
+<style>
+/* Layout: colonna unica da telefono, banda blu notte con filo arancio in alto, barra schede in basso */
+:root{
+  --bg:#EEF2F3; --surface:#FFFFFF; --surface2:#F5F8F9; --ink:#0F1E26; --muted:#55676F; --line:#D6E0E3;
+  --indigo:#0B6B6E; --indigo-ink:#FFFFFF; --band:#0D1F2D; --band-ink:#EAF6F7;
+  --gold:#B25400; --gold-soft:#FDE9D6; --gold-line:#F28C28;
+  --ok:#1D7348; --ok-soft:#DDF2E6; --warn:#A85A07; --warn-soft:#FBEBD5; --bad:#B42318; --bad-soft:#FBE1DE;
+  --chip:#E2EBEE; --shadow:0 1px 2px rgba(15,30,38,.06),0 4px 14px rgba(15,30,38,.06);
+  --f-display:"Bricolage Grotesque",system-ui,sans-serif; --f-body:"Figtree",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#081217; --surface:#10202A; --surface2:#152A35; --ink:#E8F2F4; --muted:#9DB3BB; --line:#23404D;
+  --indigo:#5ED3CF; --indigo-ink:#081217; --band:#06141D; --band-ink:#EAF6F7;
+  --gold:#FFAD5C; --gold-soft:#3A2410; --gold-line:#F28C28;
+  --ok:#5ACB92; --ok-soft:#163626; --warn:#F2A54A; --warn-soft:#3B2711; --bad:#F2786C; --bad-soft:#3D1A18;
+  --chip:#1A3340; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#081217; --surface:#10202A; --surface2:#152A35; --ink:#E8F2F4; --muted:#9DB3BB; --line:#23404D;
+  --indigo:#5ED3CF; --indigo-ink:#081217; --band:#06141D; --band-ink:#EAF6F7;
+  --gold:#FFAD5C; --gold-soft:#3A2410; --gold-line:#F28C28;
+  --ok:#5ACB92; --ok-soft:#163626; --warn:#F2A54A; --warn-soft:#3B2711; --bad:#F2786C; --bad-soft:#3D1A18;
+  --chip:#1A3340; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold-line);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{background:var(--band);color:var(--band-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px 10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.aname{font-family:var(--f-display);font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stitch{height:0;border-top:2px solid var(--gold-line);opacity:.9}
+.mode{display:flex;background:rgba(255,255,255,.1);border-radius:999px;padding:3px;flex:none}
+.mode button{border:0;background:none;color:var(--band-ink);padding:6px 11px;border-radius:999px;font-size:13px;font-weight:600}
+.mode button.on{background:var(--gold-line);color:#1B1606}
+main{padding-block:16px 24px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:24px;line-height:1.15}
+h2{font-size:18px}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border-radius:14px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat span{font-size:12px;color:var(--muted)}
+.fete{background:var(--gold-soft);border:1.5px dashed var(--gold-line);border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.fete b{font-family:var(--f-display);font-size:28px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1}
+.list{display:flex;flex-direction:column;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;gap:12px;align-items:center;padding:12px 14px;border:0;background:none;text-align:left;width:100%;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row:active{background:var(--surface2)}
+.row-main{flex:1;min-width:0}
+.row-t{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-end{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.thumb{width:48px;height:56px;border-radius:10px;object-fit:cover;flex:none;background:var(--chip)}
+.av{width:42px;height:42px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-weight:700;color:var(--indigo);flex:none}
+.pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.st-coupe,.st-couture,.st-finition{background:var(--warn-soft);color:var(--warn)}
+.st-pret{background:var(--ok-soft);color:var(--ok)}
+.st-recu{background:var(--chip);color:var(--indigo)}
+.st-livre{background:var(--chip);color:var(--muted)}
+.reste{font-size:12.5px;font-weight:700;color:var(--bad);font-variant-numeric:tabular-nums}
+.solde{font-size:12.5px;font-weight:700;color:var(--ok)}
+.bad{color:var(--bad)!important;font-weight:600}
+.empty{padding:22px 16px;text-align:center;color:var(--muted);font-size:14px}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:var(--indigo);color:var(--indigo-ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;min-height:46px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn.gold{background:var(--gold-line);color:#1B1606}
+.btn.wa{background:#1FA855;color:#fff}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.sm{padding:8px 12px;min-height:36px;font-size:13.5px;border-radius:10px}
+.btn.block{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns>.btn{flex:1 1 140px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{border:0;background:var(--chip);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--indigo);color:var(--indigo-ink)}
+.search{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px}
+.banner{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:13.5px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+nav.tabs button{border:0;background:none;padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);position:relative}
+nav.tabs button.on{color:var(--indigo)}
+nav.tabs svg{width:23px;height:23px}
+.badge{position:absolute;top:4px;left:calc(50% + 6px);background:var(--bad);color:#fff;border-radius:999px;font-size:10.5px;min-width:17px;height:17px;display:grid;place-items:center;padding:0 4px}
+/* catalogue */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:0;padding:0;text-align:left;display:flex;flex-direction:column}
+.card img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:var(--chip);max-width:100%}
+.card-b{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px}
+.card-t{font-weight:700;font-size:14.5px;line-height:1.25}
+.price{font-family:var(--f-display);font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums}
+.tag{position:absolute;top:8px;left:8px;background:var(--gold-line);color:#1B1606;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.hbtn{border:1px solid rgba(255,255,255,.3);background:none;color:var(--band-ink);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
+.hchip{border:0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;background:rgba(255,255,255,.14);color:var(--band-ink);white-space:nowrap}
+.hchip.ok{background:#1F7A4D;color:#fff}.hchip.warn{background:var(--gold-line);color:#1B1606}.hchip.bad{background:#C0392B;color:#fff}
+.sync{font-size:12px;opacity:.85;white-space:nowrap}.sync.err{color:#FFB4A9;opacity:1}
+.code{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.18em;color:var(--gold)}
+.linkbox{background:var(--surface2);border:1px dashed var(--gold-line);border-radius:10px;padding:10px 12px;font-size:13.5px;word-break:break-all;user-select:all}
+.imgw{position:relative}
+.pcount{position:absolute;bottom:8px;right:8px;background:rgba(10,12,30,.72);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pcell{position:relative;aspect-ratio:4/5;max-width:100%}
+.pcell img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
+.pcover{position:absolute;left:5px;bottom:5px;background:var(--gold-line);color:#1B1606;font-size:10px;font-weight:700;padding:2px 6px;border-radius:999px}
+.pdel,.pmove{position:absolute;top:5px;border:0;width:28px;height:28px;border-radius:50%;background:rgba(10,12,30,.72);color:#fff;font-size:16px;line-height:1;display:grid;place-items:center}
+.pdel{right:5px}.pmove{left:5px;font-size:13px}
+.padd{aspect-ratio:4/5;max-width:100%;border:2px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);cursor:pointer;text-align:center;padding:4px}
+.padd span{font-size:28px;line-height:1;color:var(--indigo)}
+.padd small{font-size:11.5px;font-weight:600}
+.gal{position:relative;border-radius:14px;overflow:hidden;background:var(--chip)}
+.gal-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gal-track::-webkit-scrollbar{display:none}
+.gal-track img{flex:0 0 100%;width:100%;max-height:380px;object-fit:contain;scroll-snap-align:center}
+.gal-n{position:absolute;top:10px;right:10px;background:rgba(10,12,30,.72);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+.dots i.on{background:#fff;width:18px;border-radius:9px}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(4,12,18,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:92%;overflow-y:auto;border-radius:20px 20px 0 0;padding-block:8px calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px;overscroll-behavior:contain}
+.grab{width:40px;height:4px;border-radius:9px;background:var(--line);margin:4px auto 0}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.x{border:0;background:var(--chip);width:34px;height:34px;border-radius:50%;font-size:18px;line-height:1;flex:none}
+.panel{background:var(--surface);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:12.5px;font-weight:600;color:var(--muted)}
+.f input,.f select,.f textarea{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:10px 12px;width:100%;min-width:0;font-size:16px}
+.f textarea{min-height:76px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mes{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.mes .f input{text-align:right;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:14px}
+.kv div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:4px}
+.kv b{font-variant-numeric:tabular-nums}
+.money{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:6px}
+.money b{display:block;font-family:var(--f-display);font-size:17px;font-variant-numeric:tabular-nums}
+.money span{font-size:12px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.step{border:0;background:var(--chip);border-radius:9px;padding:8px 2px;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px}
+.step i{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.5}
+.step.done{background:var(--indigo);color:var(--indigo-ink)}
+.step.done i{opacity:1}
+.bar{height:8px;border-radius:9px;background:var(--chip);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold-line);border-radius:9px}
+.photo-big{width:100%;max-height:360px;object-fit:contain;border-radius:14px;background:var(--chip)}
+.photo-pick{display:flex;gap:12px;align-items:center}
+.photo-pick img{width:64px;height:76px;object-fit:cover;border-radius:10px}
+.msg{background:var(--surface);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.reply{background:var(--gold-soft);border-radius:10px;padding:8px 11px;font-size:14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act{border:0;background:var(--surface);border-radius:16px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);min-height:96px}
+.act svg{width:26px;height:26px;color:var(--gold)}
+.act b{font-size:14.5px}
+.act span{font-size:12.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:60;font-size:14px;max-width:90%}
+.note{font-size:12.5px;color:var(--muted)}
+.hello{display:flex;flex-direction:column;gap:4px}
+@media (min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}}}
+</style>
+<style>
+.timeline{display:flex;flex-direction:column;gap:8px}
+.rep{border:0;background:var(--surface);border-radius:14px;padding:11px 13px;text-align:left;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);border-left:4px solid var(--line);width:100%;min-width:0}
+.rep.recu,.rep.diag{border-left-color:var(--indigo)}.rep.piece,.rep.repar{border-left-color:var(--warn)}.rep.pret{border-left-color:var(--ok)}.rep.livre,.rep.annule{border-left-color:var(--line);opacity:.75}
+.st-recu,.st-diag{background:var(--chip);color:var(--indigo)}.st-piece,.st-repar{background:var(--warn-soft);color:var(--warn)}.st-pret{background:var(--ok-soft);color:var(--ok)}.st-livre,.st-annule{background:var(--chip);color:var(--muted)}
+.st-dispo{background:var(--ok-soft);color:var(--ok)}.st-reserve{background:var(--warn-soft);color:var(--warn)}.st-vendu{background:var(--chip);color:var(--muted)}
+.ticket{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums;color:var(--gold)}
+.ph-ic{width:48px;height:56px;border-radius:10px;flex:none;object-fit:cover;background:var(--chip);display:grid;place-items:center;color:var(--muted)}
+.ph-ic svg{width:26px;height:26px}
+.big-total{font-family:var(--f-display);font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.navd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode-b{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 4px;font-weight:700;font-size:13.5px}
+.mode-b.on{border-color:var(--indigo);background:var(--indigo);color:var(--indigo-ink)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tagb{border:1.5px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600}
+.tagb.on{border-color:var(--indigo);background:var(--indigo);color:var(--indigo-ink)}
+.batt{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-variant-numeric:tabular-nums}
+.batt i{width:22px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative;display:inline-block}
+.batt i b{position:absolute;left:1px;top:1px;bottom:1px;background:currentColor;border-radius:1px}
+.seg{display:flex;background:var(--chip);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;border-radius:10px;padding:8px;font-weight:700;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.suivi{display:flex;flex-direction:column;gap:6px}
+.suivi div{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.suivi div i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);flex:none}
+.suivi div.done{color:var(--ink);font-weight:600}.suivi div.done i{background:var(--ok);border-color:var(--ok)}
+.suivi div.now{color:var(--ink);font-weight:800}.suivi div.now i{background:var(--gold-line);border-color:var(--gold-line)}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#F28C28"/><rect x="10.5" y="5.5" width="13" height="23" rx="3" fill="none" stroke="#0D1F2D" stroke-width="2.4"/><path d="M15 25h4" stroke="#0D1F2D" stroke-width="2.2" stroke-linecap="round"/><path d="M14 11.5l3.5 3.5-2 2 3.5 3.5" fill="none" stroke="#0D1F2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div style="min-width:0"><div class="eyebrow">Teranga Phone</div><div class="aname" id="aname"></div></div>
+    </div>
+    <div id="hdrR"></div>
+  </div>
+  <div class="stitch"></div>
+</header>
+<main class="wrap" id="main"></main>
+<nav class="tabs"><div class="wrap" id="tabs"></div></nav>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+(function(){
+const KEY='teranga-phone-demo-v1';
+const MARQUES=['Apple','Samsung','Tecno','Itel','Infinix','Xiaomi','Oppo','Huawei','Nokia','Autre'];
+const PANNES=['Écran cassé','Batterie','Ne charge pas','Ne s’allume pas','Tombé dans l’eau','Pas de réseau','Haut-parleur / micro','Caméra','Bloqué / logiciel','Autre'];
+const MEMS=['16 Go','32 Go','64 Go','128 Go','256 Go','512 Go','1 To'];
+const ETATS=['Neuf','Comme neuf','Très bon','Bon','Avec défauts'];
+const MODES=['Espèces','Wave','Orange Money'];
+const RS={recu:'Reçu',diag:'Diagnostic',piece:'Attente pièce',repar:'En réparation',pret:'Prêt',livre:'Rendu',annule:'Annulé'};
+const RSTEPS=['recu','diag','piece','repar','pret','livre'];
+const PS={dispo:'Disponible',reserve:'Réservé',vendu:'Vendu'};
+let S, view='accueil', mode='shop', q='', viewAs=null, delArm=null, caDay=null, repF='encours', stockSeg='tel', enc=null, pickPannes=[];
+
+/* ---------- utils ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+const today=()=>iso(new Date());
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const shift=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return iso(d)};
+const daysTo=s=>Math.round((new Date(s+'T12:00')-new Date(today()+'T12:00'))/864e5);
+const dateFr=(s,opt)=>s?new Date(s+'T12:00').toLocaleDateString('fr-FR',opt||{weekday:'short',day:'numeric',month:'short'}):'';
+const dayLabel=s=>{const d=daysTo(s);return d===0?'Aujourd’hui':d===1?'Demain':d===-1?'Hier':dateFr(s,{weekday:'long',day:'numeric',month:'long'})};
+const fmt=n=>Math.round(+n||0).toLocaleString('fr-FR').replace(/[  ]/g,' ')+' F';
+const num=v=>{const n=parseFloat(String(v).replace(/\s/g,'').replace(',','.'));return isNaN(n)?0:n};
+const initials=s=>String(s||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+const client=id=>S.clients.find(c=>c.id===id);
+const tech=id=>(S.equipe||[]).find(e=>e.id===id);
+const rep_=id=>S.reparations.find(r=>r.id===id);
+const tel_=id=>S.telephones.find(t=>t.id===id);
+const piece=id=>S.pieces.find(p=>p.id===id);
+const waNum=t=>{let d=String(t||'').replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===9)d='221'+d;return d};
+const waLink=(t,msg)=>'https://wa.me/'+waNum(t)+'?text='+encodeURIComponent(msg);
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+const nowHm=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const no4=n=>String(n).padStart(4,'0');
+const sumP=a=>(a||[]).reduce((x,p)=>x+num(p.montant),0);
+const repReste=r=>Math.max(0,num(r.prix)-sumP(r.paiements));
+const venteReste=v=>Math.max(0,num(v.total)-sumP(v.paiements));
+const repNom=r=>client(r.clientId)?client(r.clientId).nom:(r.nom||'Client');
+const venteNom=v=>client(v.clientId)?client(v.clientId).nom:(v.nom||'Client de passage');
+const telNom=t=>[t.marque==='Autre'?'':t.marque,t.modele].filter(Boolean).join(' ');
+const repTel=r=>[r.marque==='Autre'?'':r.marque,r.modele].filter(Boolean).join(' ')||'Téléphone';
+const showRep=()=>S.shop.activite!=='vente', showVente=()=>S.shop.activite!=='repar';
+function garantieFin(r){if(!r.dateRendu)return '';return shift(r.dateRendu,+(r.garantie??S.shop.garantie??30))}
+function battHtml(b){b=Math.max(0,Math.min(100,+b||0));const col=b>=85?'var(--ok)':b>=75?'var(--warn)':'var(--bad)';return `<span class="batt" style="color:${col}"><i><b style="width:${Math.round(b*0.17)}px"></b></i>${b}%</span>`}
+
+/* illustration for sample phones */
+function phoneArt(c1,c2){const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500"><rect width="400" height="500" fill="#E8EEF0"/><circle cx="200" cy="250" r="175" fill="#D9E3E6"/><rect x="128" y="70" width="144" height="300" rx="26" fill="${c1}"/><rect x="138" y="92" width="124" height="256" rx="14" fill="${c2}"/><rect x="178" y="80" width="44" height="8" rx="4" fill="#0D1F2D" opacity=".5"/><circle cx="200" cy="220" r="34" fill="#fff" opacity=".25"/><path d="M150 420h100" stroke="#0D1F2D" stroke-width="6" stroke-linecap="round" opacity=".2"/></svg>`;return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
+
+/* ---------- données d'exemple ---------- */
+function seed(){
+  const e1={id:uid(),nom:'Modou'},e2={id:uid(),nom:'Cheikh'};
+  const C=(nom,tel)=>({id:uid(),nom,tel,note:'',code:String(1000+Math.floor(Math.random()*9000))});
+  const c1=C('Aliou Ndiaye','77 512 08 44'),c2=C('Mame Diarra Fall','78 210 66 31'),c3=C('Ousmane Sy','76 904 22 17'),c4=C('Binta Cissé','77 318 90 05'),c5=C('Pape Gueye','70 455 61 28');
+  let no=40;const R=(cl,marque,modele,pannes,prix,av,statut,days,t,extra)=>({id:uid(),no:++no,clientId:cl.id,marque,modele,imei:'35'+String(Math.floor(Math.random()*1e13)).padStart(13,'0'),couleur:'',code:'',pannes,description:'',photos:[],dateRecu:addDays(-days),datePrevue:addDays(2-days),prix,paiements:av?[{id:uid(),montant:av,mode:'Wave',date:addDays(-days),heure:'10:15'}]:[],statut,techId:t.id,pieces:[],garantie:30,dateRendu:statut==='livre'?addDays(-days+2):'',...(extra||{})});
+  const pc=[{id:uid(),nom:'Écran iPhone 11',modele:'iPhone 11',qte:2,cout:18000,prix:30000},{id:uid(),nom:'Batterie iPhone X',modele:'iPhone X',qte:1,cout:7000,prix:15000},{id:uid(),nom:'Connecteur de charge Type-C',modele:'Samsung / Tecno',qte:6,cout:1500,prix:5000},{id:uid(),nom:'Écran Tecno Spark 10',modele:'Tecno Spark 10',qte:0,cout:9000,prix:17000}];
+  const reps=[R(c1,'Apple','iPhone 11',['Écran cassé'],30000,10000,'repar',1,e1),R(c2,'Samsung','Galaxy A14',['Ne charge pas'],5000,0,'pret',2,e2),R(c3,'Tecno','Spark 10',['Écran cassé'],17000,5000,'piece',3,e1),R(c4,'Apple','iPhone X',['Batterie'],15000,15000,'livre',9,e1),R(c5,'Infinix','Hot 30',['Tombé dans l’eau','Ne s’allume pas'],0,0,'diag',0,e2)];
+  reps[0].pieces=[{pieceId:pc[0].id,nom:pc[0].nom,cout:pc[0].cout}];reps[3].pieces=[{pieceId:pc[1].id,nom:pc[1].nom,cout:pc[1].cout}];
+  const P=(marque,modele,mem,bat,etat,couleur,achat,prix,c1_,c2_,statut,nouveau)=>{const ph=[phoneArt(c1_,c2_)];return {id:uid(),marque,modele,memoire:mem,batterie:bat,etat,couleur,imei:'35'+String(Math.floor(Math.random()*1e13)).padStart(13,'0'),prixAchat:achat,prix,photo:ph[0],photos:ph,statut,nouveau:!!nouveau,discuter:true,prixMin:Math.round((achat+(prix-achat)*0.4)/1000)*1000,fournisseur:{nom:'',tel:'',cni:''},dateAchat:addDays(-5),garantie:'1 mois',desc:''}};
+  const tels=[P('Apple','iPhone 12','128 Go',88,'Très bon','Bleu',165000,200000,'#1E3A8A','#93C5FD','dispo',true),P('Apple','iPhone XR','64 Go',81,'Bon','Rouge',80000,105000,'#B91C1C','#FCA5A5','dispo'),P('Samsung','Galaxy A54','128 Go',96,'Comme neuf','Noir',120000,150000,'#111827','#6B7280','reserve'),P('Tecno','Camon 20','256 Go',100,'Neuf','Vert',95000,115000,'#065F46','#6EE7B7','dispo',true),P('Apple','iPhone 11','64 Go',84,'Bon','Blanc',95000,125000,'#E5E7EB','#9CA3AF','vendu')];
+  const V=(cl,days,t,mode)=>({id:uid(),date:addDays(-days),heure:'16:20',clientId:cl?cl.id:null,nom:cl?'':'Client de passage',type:'telephone',telId:t.id,lignes:[{nom:telNom(t)+' '+t.memoire,prix:t.prix}],total:t.prix,cout:t.prixAchat,paiements:[{id:uid(),montant:t.prix,mode,date:addDays(-days),heure:'16:20'}],techId:e1.id});
+  const ventes=[V(c2,3,tels[4],'Wave'),{id:uid(),date:today(),heure:'11:05',clientId:null,nom:'Client de passage',type:'accessoire',lignes:[{nom:'Chargeur rapide',prix:4000},{nom:'Protection écran',prix:1500}],total:5500,cout:2500,paiements:[{id:uid(),montant:5500,mode:'Espèces',date:today(),heure:'11:05'}],techId:e2.id}];
+  const dem=[
+    {id:uid(),clientId:null,nomV:'Fatou Sarr',telV:'77 621 40 18',type:'devis',texte:'L’écran est noir mais il vibre.',photo:null,data:{marque:'Apple',modele:'iPhone 13',pannes:['Écran cassé']},date:today(),statut:'nouveau',reponse:''},
+    {id:uid(),clientId:null,nomV:'Lamine Diop',telV:'70 213 55 09',type:'vente',texte:'Je veux le vendre, il est propre.',photo:phoneArt('#4C1D95','#C4B5FD'),data:{marque:'Samsung',modele:'Galaxy S21',memoire:'128 Go',batterie:86,etat:'Très bon',prixVoulu:140000},date:today(),statut:'nouveau',reponse:''},
+    {id:uid(),clientId:c5.id,type:'achat',texte:'Il est encore disponible ?',data:{telId:tels[1].id,telNom:'iPhone XR 64 Go · 105 000 F',offre:90000},date:addDays(-1),statut:'nouveau',reponse:''},
+  ];
+  return {v:1,demo:true,seq:no,shop:{nom:'Seck Tech World',tel:'77 123 45 67',ville:'Dakar',adresse:'Marché Sandaga',activite:'tout',garantie:30},equipe:[e1,e2],clients:[c1,c2,c3,c4,c5],reparations:reps,pieces:pc,telephones:tels,ventes,demandes:dem};
+}
+function fixState(o){if(!o)return o;['clients','reparations','pieces','telephones','ventes','equipe'].forEach(k=>{if(!Array.isArray(o[k]))o[k]=[]});if(!Array.isArray(o.demandes))o.demandes=[];
+  o.shop=o.shop||{nom:'Mon magasin',tel:'',ville:'',adresse:'',activite:'tout',garantie:30};if(!o.shop.activite)o.shop.activite='tout';if(o.shop.garantie==null)o.shop.garantie=30;
+  if(!o.seq)o.seq=o.reparations.reduce((m,r)=>Math.max(m,+r.no||0),0);
+  o.clients.forEach(c=>{if(!c.code)c.code=newCode()});o.telephones.forEach(t=>{if(!t.photos)t.photos=t.photo?[t.photo]:[];if(!t.fournisseur)t.fournisseur={nom:'',tel:'',cni:''}});
+  o.reparations.forEach(r=>{if(!Array.isArray(r.paiements))r.paiements=[];if(!Array.isArray(r.pieces))r.pieces=[];if(!Array.isArray(r.pannes))r.pannes=[];if(!Array.isArray(r.photos))r.photos=[]});
+  o.ventes.forEach(v=>{if(!Array.isArray(v.paiements))v.paiements=[]});return o}
+function load(){try{const r=localStorage.getItem(KEY);if(r){S=fixState(JSON.parse(r));return}}catch(e){}S=fixState(seed())}
+function save(){if(ONLINE)return saveOnline();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Mémoire pleine : supprimez quelques photos')}}
+
+/* ---------- photos ---------- */
+function readPhoto(file,cb){if(!file)return;const fr=new FileReader();
+  fr.onload=()=>{const img=new Image();img.onload=()=>{const m=900,r=Math.min(1,m/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*r);cv.height=Math.round(img.height*r);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);cb(cv.toDataURL('image/jpeg',.72))};img.onerror=()=>toast('Photo illisible');img.src=fr.result};
+  fr.readAsDataURL(file)}
+const MAXP=5;let pendingPhotos=[];
+function photosField(list,label){pendingPhotos=[...(list||[])];return `<div class="f"><label>${label||'Photos (jusqu’à 5) · la 1re est la couverture'}</label><div class="pgrid" id="pgrid">${pgridHtml()}</div></div>`}
+function pgridHtml(){return pendingPhotos.map((p,k)=>`<div class="pcell"><img src="${p}" alt="Photo ${k+1}">${k===0?'<span class="pcover">Couverture</span>':`<button class="pmove" data-act="p-first" data-v="${k}" aria-label="Mettre en couverture">★</button>`}<button class="pdel" data-act="p-del" data-v="${k}" aria-label="Retirer la photo">×</button></div>`).join('')
+  +(pendingPhotos.length<MAXP?`<label class="padd" for="pp-in"><span>+</span><small>${pendingPhotos.length?'Ajouter':'Ajouter des photos'}</small><input type="file" accept="image/*" multiple id="pp-in" data-photos="1" hidden></label>`:'')}
+function refreshPgrid(){const g=$('#pgrid');if(g)g.innerHTML=pgridHtml()}
+function gallery(m){const ph=m.photos&&m.photos.length?m.photos:[m.photo].filter(Boolean);if(!ph.length)return '';
+  return `<div class="gal"><div class="gal-track" id="galT">${ph.map((p,k)=>`<img src="${p}" alt="Photo ${k+1}">`).join('')}</div>${ph.length>1?`<div class="gal-n" id="galN">1 / ${ph.length}</div><div class="dots" id="galD">${ph.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join('')}</div>`:''}</div>`}
+
+/* ---------- toast & sheet ---------- */
+let tt;function toast(m){$('#toastRoot').innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(tt);tt=setTimeout(()=>$('#toastRoot').innerHTML='',2400)}
+function sheet(title,body){$('#sheetRoot').innerHTML=`<div class="scrim" data-act="close-bg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="grab"></div><div class="sheet-h"><h2>${esc(title)}</h2><button class="x" data-act="close" aria-label="Fermer">×</button></div>${body}</div></div>`;document.body.style.overflow='hidden';delArm=null}
+function closeSheet(){$('#sheetRoot').innerHTML='';document.body.style.overflow='';enc=null}
+
+/* ---------- icônes ---------- */
+const I={
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  tool:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2"/></svg>',
+  cash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></svg>',
+  msg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+  q:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg>',
+  wa:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.8-1c.2-.3.4-.2.6-.1l2 .9c.3.1.4.2.5.3 0 .2 0 .8-.2 1.4z"/></svg>'
+};
+
+/* ---------- rendu ---------- */
+function render(){
+  if(ONLINE&&onlineScreen())return;
+  $('#aname').textContent=S.shop.nom;renderHdr();
+  const nNew=S.demandes.filter(d=>d.statut==='nouveau').length;
+  const tabs=mode==='shop'
+    ?[['accueil','Accueil',I.home,nNew],...(showRep()?[['repar','Réparations',I.tool]]:[]),...(showVente()?[['stock','Vente',I.phone]]:[]),['clients','Clients',I.users],['caisse','Caisse',I.cash]]
+    :[['c-direct','Envoyer',I.send],...(showVente()?[['c-shop','Téléphones',I.phone]]:[]),['c-accueil','Mon espace',I.home],['c-messages','Messages',I.msg]];
+  $('#tabs').innerHTML=tabs.map(([k,l,ic,b])=>`<button class="${view===k?'on':''}" data-act="tab" data-v="${k}" aria-label="${l}">${ic}<span>${l}</span>${b?`<span class="badge">${b}</span>`:''}</button>`).join('');
+  const V={accueil,repar:reparations,stock,clients,caisse,demandes,'c-direct':cDirect,'c-shop':cShop,'c-accueil':cAccueil,'c-messages':cMessages};
+  $('#main').innerHTML=(V[view]||accueil)();
+}
+const demoBanner=()=>S.demo?`<div class="banner"><span>Ce sont des <b>exemples</b> pour découvrir l'app.</span><button class="btn sm ghost" data-act="clear-demo">Commencer à vide</button></div>`:'';
+function repRow(r,showClient=true){const late=r.statut!=='livre'&&r.statut!=='annule'&&r.datePrevue&&daysTo(r.datePrevue)<0;const rst=repReste(r);
+  return `<button class="rep ${r.statut}" data-act="rep" data-id="${r.id}">${r.photos&&r.photos[0]?`<img class="ph-ic" src="${r.photos[0]}" alt="">`:`<span class="ph-ic">${I.phone}</span>`}<div class="row-main"><div class="row-t"><span class="ticket">N° ${no4(r.no)}</span> · ${esc(showClient?repNom(r):repTel(r))}</div><div class="row-s">${esc(repTel(r))} · ${esc((r.pannes||[]).join(', ')||'—')}</div><div class="row-s ${late?'bad':''}">${r.statut==='livre'?'Rendu '+dateFr(r.dateRendu,{day:'numeric',month:'short'}):late?'En retard · prévu '+dateFr(r.datePrevue,{day:'numeric',month:'short'}):r.datePrevue?'Prévu '+dayLabel(r.datePrevue).toLowerCase():''}</div></div><div class="row-end"><span class="pill st-${r.statut}">${RS[r.statut]}</span>${num(r.prix)?(rst?`<span class="reste">${fmt(rst)}</span>`:'<span class="solde">Payé</span>'):'<span class="small muted">Prix à voir</span>'}</div></button>`}
+function accueil(){
+  const t=today();const encours=S.reparations.filter(r=>!['livre','annule'].includes(r.statut));const prets=encours.filter(r=>r.statut==='pret');
+  const oublies=prets.filter(r=>r.datePret&&daysTo(r.datePret)<=-30);const retard=encours.filter(r=>r.statut!=='pret'&&r.datePrevue&&daysTo(r.datePrevue)<0);
+  const encToday=allPays().filter(p=>p.date===t).reduce((a,p)=>a+num(p.montant),0);
+  const news=S.demandes.filter(d=>d.statut==='nouveau');const low=S.pieces.filter(p=>num(p.qte)<=1);
+  return `${demoBanner()}${typeof a2hs==='function'?a2hs():''}
+  <div class="sec-h"><h1>${new Date().getHours()<17?'Bonjour':'Bonsoir'}, ${esc(S.shop.nom)}</h1><button class="btn sm ghost" data-act="settings">Réglages</button></div>
+  <div class="stats">${showRep()?`<div class="stat"><b>${encours.length}</b><span>Réparations en cours</span></div><div class="stat"><b>${prets.length}</b><span>Prêts à rendre</span></div>`:`<div class="stat"><b>${S.telephones.filter(x=>x.statut==='dispo').length}</b><span>Téléphones en vente</span></div><div class="stat"><b>${S.telephones.filter(x=>x.statut==='reserve').length}</b><span>Réservés</span></div>`}<div class="stat"><b>${fmt(encToday)}</b><span>Encaissé aujourd’hui</span></div></div>
+  <div class="btns">${showRep()?'<button class="btn" data-act="new-rep">+ Réparation</button>':''}${showVente()?'<button class="btn gold" data-act="new-sale">+ Vendre</button>':''}</div>
+  ${news.length?`<section class="sec"><div class="sec-h"><h2>À traiter</h2><button class="btn sm ghost" data-act="tab" data-v="demandes">Tout voir</button></div><div class="list">${news.slice(0,4).map(demRow).join('')}</div></section>`:''}
+  ${showRep()&&prets.length?`<section class="sec"><div class="sec-h"><h2>Prêts à rendre</h2></div><div class="timeline">${prets.map(r=>repRow(r)).join('')}</div></section>`:''}
+  ${showRep()&&retard.length?`<section class="sec"><div class="sec-h"><h2>En retard</h2></div><div class="timeline">${retard.map(r=>repRow(r)).join('')}</div></section>`:''}
+  ${oublies.length?`<div class="banner"><span><b>${oublies.length} téléphone${oublies.length>1?'s':''}</b> prêt${oublies.length>1?'s':''} depuis plus de 30 jours : appelez le client.</span></div>`:''}
+  ${low.length&&showRep()?`<div class="banner"><span>Pièces presque finies : <b>${low.map(p=>esc(p.nom)).join(', ')}</b></span><button class="btn sm ghost" data-act="go-pieces">Voir</button></div>`:''}`;
+}
+function reparations(){
+  const F={encours:r=>!['livre','annule'].includes(r.statut),pret:r=>r.statut==='pret',piece:r=>r.statut==='piece',livre:r=>r.statut==='livre',tous:()=>true};
+  const L={encours:'En cours',pret:'Prêts',piece:'Attente pièce',livre:'Rendus',tous:'Tous'};
+  let list=S.reparations.filter(F[repF]);
+  if(q){const qq=q.toLowerCase(),qd=q.replace(/\D/g,'');list=list.filter(r=>(repNom(r)+' '+repTel(r)+' '+no4(r.no)).toLowerCase().includes(qq)||(qd.length>=3&&(String(r.imei).includes(qd)||String(r.no)===qd.replace(/^0+/,''))))}
+  list.sort((a,b)=>b.no-a.no);
+  return `<div class="sec-h"><h1>Réparations</h1><button class="btn sm" data-act="new-rep">+ Nouvelle</button></div>
+  <input class="search" id="q" type="search" placeholder="Nom, N° de reçu, IMEI…" value="${esc(q)}" data-input="q">
+  <div class="chips">${Object.keys(L).map(k=>`<button class="chip ${repF===k?'on':''}" data-act="rep-f" data-v="${k}">${L[k]} · ${S.reparations.filter(F[k]).length}</button>`).join('')}</div>
+  <div class="timeline">${list.length?list.map(r=>repRow(r)).join(''):'<div class="list"><div class="empty">Aucune réparation ici.</div></div>'}</div>`;
+}
+function telCard(t,act){const n=(t.photos||[]).length;return `<button class="card" data-act="${act}" data-id="${t.id}"><div class="imgw"><img src="${t.photo||''}" alt="${esc(telNom(t))}" loading="lazy">${t.statut!=='dispo'?`<span class="tag" style="background:${t.statut==='vendu'?'var(--chip)':'var(--gold-line)'}">${PS[t.statut]}</span>`:t.nouveau?'<span class="tag">Nouveau</span>':''}${n>1?`<span class="pcount">${n} photos</span>`:''}</div><div class="card-b"><div class="card-t">${esc(telNom(t))}</div><div class="small muted">${esc(t.memoire||'')} · ${esc(t.etat||'')}</div><div style="display:flex;justify-content:space-between;align-items:center;gap:2px 6px;flex-wrap:wrap"><span class="price">${fmt(t.prix)}</span>${t.batterie?battHtml(t.batterie):''}</div>${t.discuter!==false&&t.statut!=='vendu'?'<div class="small muted">Prix à discuter</div>':''}</div></button>`}
+function stock(){
+  const seg=`<div class="seg"><button class="${stockSeg==='tel'?'on':''}" data-act="seg" data-v="tel">Téléphones</button>${showRep()?`<button class="${stockSeg==='pc'?'on':''}" data-act="seg" data-v="pc">Pièces</button>`:''}<button class="${stockSeg==='vt'?'on':''}" data-act="seg" data-v="vt">Ventes</button></div>`;
+  if(stockSeg==='pc'){const list=[...S.pieces].sort((a,b)=>a.nom.localeCompare(b.nom));
+    return `<div class="sec-h"><h1>Pièces</h1><button class="btn sm" data-act="new-piece">+ Ajouter</button></div>${seg}
+    <div class="list">${list.length?list.map(p=>`<button class="row" data-act="piece" data-id="${p.id}"><div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(p.modele||'')} · achat ${fmt(p.cout)} · client ${fmt(p.prix)}</div></div><div class="row-end"><span class="pill ${num(p.qte)<=0?'st-annule':num(p.qte)<=1?'st-piece':'st-pret'}">${num(p.qte)} en stock</span></div></button>`).join(''):'<div class="empty">Ajoutez vos écrans, batteries, connecteurs…</div>'}</div>`}
+  if(stockSeg==='vt'){const list=[...S.ventes].sort((a,b)=>(b.date+b.heure).localeCompare(a.date+a.heure));
+    return `<div class="sec-h"><h1>Ventes</h1><button class="btn sm gold" data-act="new-sale">+ Vendre</button></div>${seg}
+    <div class="list">${list.length?list.map(v=>{const r=venteReste(v);return `<button class="row" data-act="vente" data-id="${v.id}"><div class="av">${initials(venteNom(v))}</div><div class="row-main"><div class="row-t">${esc(venteNom(v))}</div><div class="row-s">${esc(v.lignes.map(l=>l.nom).join(' + '))}</div><div class="row-s">${dateFr(v.date,{day:'numeric',month:'short'})}</div></div><div class="row-end"><b style="font-variant-numeric:tabular-nums">${fmt(v.total)}</b>${r?`<span class="reste">reste ${fmt(r)}</span>`:''}</div></button>`}).join(''):'<div class="empty">Aucune vente.</div>'}</div>`}
+  const list=[...S.telephones].sort((a,b)=>({dispo:0,reserve:1,vendu:2}[a.statut]-{dispo:0,reserve:1,vendu:2}[b.statut]));
+  return `<div class="sec-h"><h1>Téléphones en vente</h1><button class="btn sm" data-act="new-tel">+ Ajouter</button></div>${seg}
+  <p class="note" style="margin:0">Vos clients voient les téléphones disponibles sur votre page et peuvent les réserver.</p>
+  ${list.length?`<div class="grid">${list.map(t=>telCard(t,'tel')).join('')}</div>`:'<div class="list"><div class="empty">Ajoutez les téléphones que vous vendez, avec photos et prix.</div></div>'}`;
+}
+function clients(){
+  let list=[...S.clients].sort((a,b)=>a.nom.localeCompare(b.nom));
+  if(q)list=list.filter(c=>(c.nom+' '+c.tel).toLowerCase().includes(q.toLowerCase()));
+  return `<div class="sec-h"><h1>Clients</h1><button class="btn sm" data-act="new-client">+ Nouveau</button></div>
+  <input class="search" id="q" type="search" placeholder="Nom ou téléphone…" value="${esc(q)}" data-input="q">
+  <div class="list">${list.length?list.map(c=>{const nr=S.reparations.filter(r=>r.clientId===c.id).length,nv=S.ventes.filter(v=>v.clientId===c.id).length,du=clientDu(c.id);
+    return `<button class="row" data-act="client" data-id="${c.id}"><div class="av">${initials(c.nom)}</div><div class="row-main"><div class="row-t">${esc(c.nom)}</div><div class="row-s">${esc(c.tel)}</div><div class="row-s">${nr} réparation${nr>1?'s':''} · ${nv} achat${nv>1?'s':''}</div></div><div class="row-end">${du?`<span class="reste">${fmt(du)}</span>`:''}</div></button>`}).join(''):'<div class="empty">Aucun client.</div>'}</div>`;
+}
+const clientDu=id=>S.reparations.filter(r=>r.clientId===id&&r.statut!=='annule').reduce((a,r)=>a+repReste(r),0)+S.ventes.filter(v=>v.clientId===id).reduce((a,v)=>a+venteReste(v),0);
+function allPays(){const out=[];
+  S.reparations.forEach(r=>r.paiements.forEach(p=>out.push({...p,src:'rep',ref:r.id,label:'Réparation N° '+no4(r.no)+' · '+repNom(r),techId:r.techId})));
+  S.ventes.forEach(v=>v.paiements.forEach(p=>out.push({...p,src:'vente',ref:v.id,label:(v.type==='telephone'?'Vente ':'')+v.lignes.map(l=>l.nom).join(' + ')+' · '+venteNom(v),techId:v.techId})));
+  return out}
+function caisse(){
+  if(!caDay)caDay=today();const ps=allPays().filter(p=>p.date===caDay).sort((a,b)=>(b.heure||'').localeCompare(a.heure||''));const tot=ps.reduce((a,p)=>a+num(p.montant),0);
+  const byMode=MODES.map(m=>[m,ps.filter(p=>p.mode===m).reduce((a,p)=>a+num(p.montant),0)]);
+  const rep=ps.filter(p=>p.src==='rep').reduce((a,p)=>a+num(p.montant),0),ven=tot-rep;
+  const mo=today().slice(0,7);
+  const gainRep=S.reparations.filter(r=>r.statut==='livre'&&String(r.dateRendu).slice(0,7)===mo).reduce((a,r)=>a+num(r.prix)-r.pieces.reduce((x,p)=>x+num(p.cout),0),0);
+  const gainVen=S.ventes.filter(v=>v.date.slice(0,7)===mo).reduce((a,v)=>a+num(v.total)-num(v.cout),0);
+  const encMo=allPays().filter(p=>String(p.date).slice(0,7)===mo).reduce((a,p)=>a+num(p.montant),0);
+  return `<div class="sec-h"><h1>Caisse</h1>${showVente()?'<button class="btn sm gold" data-act="new-sale">+ Vendre</button>':''}</div>
+  <div class="navd"><button class="x" data-act="ca-shift" data-v="-1" aria-label="Jour précédent">‹</button><h2 style="text-transform:capitalize">${dayLabel(caDay)}</h2><button class="x" data-act="ca-shift" data-v="1" aria-label="Jour suivant" ${caDay>=today()?'disabled style="opacity:.3"':''}>›</button></div>
+  <div class="panel"><div class="lbl">Total encaissé</div><div class="big-total">${fmt(tot)}</div>
+  <div class="money">${byMode.map(([m,v])=>`<div><b>${fmt(v)}</b><span>${m}</span></div>`).join('')}</div>
+  ${showRep()&&showVente()?`<div class="kv" style="grid-template-columns:1fr 1fr"><div><span>Réparations</span><b>${fmt(rep)}</b></div><div><span>Ventes</span><b>${fmt(ven)}</b></div></div>`:''}</div>
+  <div class="list">${ps.length?ps.map(p=>`<button class="row" data-act="${p.src==='rep'?'rep':'vente'}" data-id="${p.ref}"><div class="row-main"><div class="row-t">${esc(p.label)}</div><div class="row-s">${esc(p.heure||'')} · ${esc(p.mode)}${tech(p.techId)?' · '+esc(tech(p.techId).nom):''}</div></div><b style="font-variant-numeric:tabular-nums">${fmt(p.montant)}</b></button>`).join(''):'<div class="empty">Rien encaissé ce jour.</div>'}</div>
+  <div class="panel"><div class="lbl">Ce mois</div><div class="kv" style="grid-template-columns:1fr"><div><span>Encaissé</span><b>${fmt(encMo)}</b></div>${showRep()?`<div><span>Gagné sur les réparations rendues (prix − pièces)</span><b>${fmt(gainRep)}</b></div>`:''}${showVente()?`<div><span>Gagné sur les ventes (prix − achat)</span><b>${fmt(gainVen)}</b></div>`:''}</div></div>`;
+}
+const DT={devis:'Devis réparation',vente:'Veut vendre son téléphone',achat:'Veut acheter',question:'Question'};
+function dCl(d){return client(d.clientId)||{nom:d.nomV||'Visiteur',tel:d.telV||'',visiteur:true}}
+function demRow(d){const cl=dCl(d);const x=d.data||{};const sub=d.type==='devis'?[x.marque,x.modele].filter(Boolean).join(' ')+' · '+(x.pannes||[]).join(', '):d.type==='vente'?[x.marque,x.modele,x.memoire].filter(Boolean).join(' ')+(x.prixVoulu?' · '+fmt(x.prixVoulu):''):d.type==='achat'?(x.telNom||''):d.texte;
+  return `<button class="row" data-act="dem" data-id="${d.id}">${d.photo?`<img class="ph-ic" src="${d.photo}" alt="">`:`<div class="av">${initials(cl.nom)}</div>`}<div class="row-main"><div class="row-t">${esc(cl.nom)}</div><div class="row-s">${DT[d.type]||d.type} · ${esc((sub||'')+negoTxt(d))}</div></div><div class="row-end">${d.statut==='nouveau'?'<span class="pill st-piece">Nouveau</span>':'<span class="pill">Traité</span>'}</div></button>`}
+function demandes(){const list=[...S.demandes].sort((a,b)=>(a.statut===b.statut?String(b.date).localeCompare(String(a.date)):a.statut==='nouveau'?-1:1));
+  return `<div class="sec-h"><h1>Demandes des clients</h1></div><p class="note" style="margin:0">Devis, téléphones à vendre ou à acheter, questions : tout ce qui arrive de votre page.</p><div class="list">${list.length?list.map(demRow).join(''):'<div class="empty">Rien pour le moment.</div>'}</div>`}
+
+/* ---------- côté client ---------- */
+function me(){if(PORTAL)return client(viewAs);if(viewAs==='__guest')return null;if(!viewAs||!client(viewAs))viewAs=(S.clients[0]||{}).id;return client(viewAs)}
+function asPicker(){if(PORTAL){const c=client(viewAs);return c?`<div class="banner"><span class="small">Connecté : <b>${esc(c.nom)}</b></span><button class="btn sm ghost" data-act="pl-out">Se déconnecter</button></div>`:''}
+  return `<div class="banner"><label for="viewAs" class="small">Aperçu en tant que</label><select id="viewAs" data-input="viewAs" class="search" style="width:auto;padding:7px 10px"><option value="__guest" ${viewAs==='__guest'?'selected':''}>Visiteur sans code</option>${S.clients.map(c=>`<option value="${c.id}" ${c.id===viewAs?'selected':''}>${esc(c.nom)}</option>`).join('')}</select></div>`}
+function guest(){try{return JSON.parse(localStorage.getItem('terangaPhone.guest')||'{}')}catch(e){return {}}}
+function saveGuest(nom,tel){try{localStorage.setItem('terangaPhone.guest',JSON.stringify({nom,tel}))}catch(e){}}
+function guestFields(){const g=guest();return `<div class="two"><div class="f"><label for="vz-nom">Votre nom</label><input id="vz-nom" autocomplete="name" value="${esc(g.nom||'')}"></div><div class="f"><label for="vz-tel">Votre numéro WhatsApp</label><input id="vz-tel" inputmode="tel" placeholder="77 000 00 00" value="${esc(g.tel||'')}"></div></div>`}
+function cDirect(){const c=me();
+  return `${c||!PORTAL?asPicker():''}${typeof a2hs==='function'&&!c?a2hs():''}<div class="hello"><div class="lbl">${esc(S.shop.nom)}${S.shop.adresse?' · '+esc(S.shop.adresse):''}</div><h1>${c?'Que voulez-vous faire ?':'Sans compte, sans code'}</h1><p class="muted" style="margin:0">${c?'Le magasin reçoit tout tout de suite.':'Écrivez votre nom et votre numéro, envoyez, c’est fait. Le magasin vous répond sur WhatsApp.'}</p></div>
+  <div class="actions">
+    ${showRep()?`<button class="act" data-act="c-devis">${I.tool}<b>Devis réparation</b><span>Envoyez la panne et une photo</span></button>`:''}
+    ${showRep()?`<button class="act" data-act="c-suivi">${I.search}<b>Suivre ma réparation</b><span>Avec le N° du reçu</span></button>`:''}
+    ${showVente()?`<button class="act" data-act="tab" data-v="c-shop">${I.phone}<b>Acheter un téléphone</b><span>Voir les téléphones en vente</span></button>`:''}
+    ${showVente()?`<button class="act" data-act="c-vendre">${I.tag}<b>Vendre mon téléphone</b><span>Photos, état, votre prix</span></button>`:''}
+    <button class="act" data-act="c-question">${I.q}<b>Poser une question</b><span>Prix, pièces, garantie…</span></button>
+  </div>
+  ${S.shop.tel?`<a class="btn wa block" href="${waLink(S.shop.tel,'Bonjour '+S.shop.nom+', ')}" target="_blank" rel="noopener">${I.wa} Écrire au magasin sur WhatsApp</a>`:''}
+  ${c||!PORTAL?'':'<p class="note" style="margin:0;text-align:center">Vous avez un code du magasin ? Allez dans « Mon espace » pour voir toutes vos réparations et vos achats.</p>'}`}
+function cShop(){const list=S.telephones.filter(t=>t.statut!=='vendu');
+  return `${me()||!PORTAL?asPicker():''}<div class="hello"><div class="lbl">${esc(S.shop.nom)}</div><h1>Téléphones en vente</h1></div>
+  ${list.length?`<div class="grid">${list.map(t=>telCard(t,'c-tel')).join('')}</div>`:'<div class="list"><div class="empty">Pas de téléphone en vente pour le moment.</div></div>'}`}
+function cRepCard(r){const i=RSTEPS.indexOf(r.statut);const rst=repReste(r);const gf=garantieFin(r);
+  return `<div class="panel"><div class="sec-h"><div><div class="row-t"><span class="ticket">N° ${no4(r.no)}</span> · ${esc(repTel(r))}</div><div class="row-s">${esc((r.pannes||[]).join(', '))}</div></div><span class="pill st-${r.statut}">${RS[r.statut]}</span></div>
+  ${r.statut==='annule'?'':`<div class="suivi">${RSTEPS.map((s,k)=>`<div class="${k<i?'done':k===i?'now':''}"><i></i>${RS[s]}</div>`).join('')}</div>`}
+  ${r.statut==='pret'?'<div class="reply" style="background:var(--ok-soft);color:var(--ok)"><b>Votre téléphone est prêt !</b> Vous pouvez passer le récupérer.</div>':''}
+  ${num(r.prix)?`<div class="money"><div><b>${fmt(r.prix)}</b><span>Prix</span></div><div><b>${fmt(sumP(r.paiements))}</b><span>Payé</span></div><div><b style="color:${rst?'var(--bad)':'var(--ok)'}">${fmt(rst)}</b><span>Reste</span></div></div>`:'<div class="small muted">Le prix sera confirmé après le diagnostic.</div>'}
+  ${gf?`<div class="small">${daysTo(gf)>=0?'🛡️ Sous garantie jusqu’au '+dateFr(gf,{day:'numeric',month:'long'}):'Garantie terminée le '+dateFr(gf,{day:'numeric',month:'long'})}</div>`:''}</div>`}
+function cAccueil(){const c=me();if(!c)return PORTAL?portalLogin():asPicker()+'<div class="empty">Choisissez un client en haut pour voir son espace (avec code).</div>';
+  const reps=S.reparations.filter(r=>r.clientId===c.id).sort((a,b)=>b.no-a.no);const achats=S.ventes.filter(v=>v.clientId===c.id).sort((a,b)=>b.date.localeCompare(a.date));
+  return `${asPicker()}${typeof a2hs==='function'?a2hs():''}<div class="hello"><div class="lbl">${esc(S.shop.nom)}</div><h1>Bonjour ${esc(c.nom.split(' ')[0])}</h1></div>
+  <button class="btn gold block" data-act="tab" data-v="c-direct">Devis, vendre, acheter, question</button>
+  ${showRep()?`<section class="sec"><h2>Mes réparations</h2>${reps.length?reps.map(cRepCard).join(''):'<div class="list"><div class="empty">Pas de réparation.</div></div>'}</section>`:''}
+  ${achats.length?`<section class="sec"><h2>Mes achats</h2><div class="list">${achats.map(v=>{const r=venteReste(v);return `<div class="row"><div class="row-main"><div class="row-t">${esc(v.lignes.map(l=>l.nom).join(' + '))}</div><div class="row-s">${dateFr(v.date,{day:'numeric',month:'long'})}</div></div><div class="row-end"><b>${fmt(v.total)}</b>${r?`<span class="reste">reste ${fmt(r)}</span>`:''}</div></div>`}).join('')}</div></section>`:''}
+  ${S.shop.tel?`<a class="btn wa block" href="${waLink(S.shop.tel,'Bonjour '+S.shop.nom+', ')}" target="_blank" rel="noopener">${I.wa} Écrire au magasin sur WhatsApp</a>`:''}`}
+function negoBox(d,list){const x=d.data||{};if(!x.contre||x.accepte||!['devis','vente','achat'].includes(d.type))return '';if(list.some(y=>y.data&&y.data.ref===d.id))return '<div class="small muted">Vous avez répondu à ce prix.</div>';
+  return `<div class="reply" style="background:var(--warn-soft)"><b>Le magasin propose ${fmt(x.contre)}</b><div class="btns" style="margin-top:6px"><button class="btn sm gold" data-act="c-accept" data-id="${d.id}">J’accepte</button><button class="btn sm ghost" data-act="c-counter" data-id="${d.id}">Autre prix</button></div></div>`}
+function cMessages(){const c=me();if(!c)return PORTAL?`<div class="hello"><div class="lbl">${esc(S.shop.nom)}</div><h1>Une question ?</h1><p class="muted" style="margin:0">Écrivez votre question sans code. Le magasin vous répond sur WhatsApp.</p></div><button class="btn block" data-act="c-question">Poser une question</button><p class="note" style="margin:0">Avec un code, vous voyez ici toutes les réponses du magasin : allez dans « Mon espace ».</p>`:asPicker()+'<div class="empty">Choisissez un client en haut.</div>';
+  const list=S.demandes.filter(d=>d.clientId===c.id).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  return `${asPicker()}<div class="sec-h"><h1>Mes messages</h1><button class="btn sm" data-act="c-question">+ Question</button></div>
+  ${list.length?list.map(d=>`<div class="msg"><div class="sec-h"><span class="lbl">${DT[d.type]||d.type} · ${dateFr(d.date,{day:'numeric',month:'short'})}</span>${d.statut==='nouveau'?'<span class="pill">En attente</span>':'<span class="pill st-pret">Répondu</span>'}</div>${d.photo?`<img class="photo-big" src="${d.photo}" alt="" style="max-height:180px">`:''}<div>${esc(demSummary(d))}</div>${d.reponse?`<div class="reply"><b>Magasin :</b> ${esc(d.reponse)}</div>`:''}${negoBox(d,list)}</div>`).join(''):'<div class="list"><div class="empty">Aucun message.</div></div>'}`}
+function negoTxt(d){const x=d.data||{};const o=[];if(x.offre)o.push('offre du client '+fmt(x.offre));if(x.contre)o.push('prix du magasin '+fmt(x.contre));if(x.accepte)o.push('d’accord pour '+fmt(x.prixAccepte));return o.length?' · '+o.join(' · '):''}
+function demSummary(d){return demSum0(d)+negoTxt(d)}
+function demSum0(d){const x=d.data||{};if(d.type==='devis')return [x.marque,x.modele].filter(Boolean).join(' ')+' — '+(x.pannes||[]).join(', ')+(d.texte?'. '+d.texte:'');
+  if(d.type==='vente')return [x.marque,x.modele,x.memoire].filter(Boolean).join(' ')+(x.batterie?' · batterie '+x.batterie+'%':'')+(x.etat?' · '+x.etat:'')+(x.prixVoulu?' · prix voulu '+fmt(x.prixVoulu):'')+(d.texte?'. '+d.texte:'');
+  if(d.type==='achat')return (x.telNom||'Téléphone')+(d.texte?' — '+d.texte:'');return d.texte}
+
+/* ---------- feuilles : réparation ---------- */
+function opts(arr,sel){return arr.map(v=>`<option ${v===sel?'selected':''}>${esc(v)}</option>`).join('')}
+function techOpts(sel,none){return (none?`<option value="">${none}</option>`:'')+(S.equipe||[]).map(e=>`<option value="${e.id}" ${e.id===sel?'selected':''}>${esc(e.nom)}</option>`).join('')}
+function clientSelect(id,sel,pre){return `<div class="f"><label for="${id}">Client</label><select id="${id}" data-newc="${id}"><option value="">— Choisir —</option><option value="__new" ${sel==='__new'?'selected':''}>+ Nouveau client</option>${[...S.clients].sort((a,b)=>a.nom.localeCompare(b.nom)).map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(c.nom)}</option>`).join('')}</select></div>
+  <div class="two" id="${id}-new" ${sel==='__new'?'':'hidden'}><div class="f"><label for="${id}-nom">Nom</label><input id="${id}-nom" value="${esc(pre&&pre.nom||'')}"></div><div class="f"><label for="${id}-tel">Téléphone</label><input id="${id}-tel" inputmode="tel" value="${esc(pre&&pre.tel||'')}" placeholder="77 000 00 00"></div></div>`}
+function readClient(id){let cid=val(id);if(cid==='__new'){const nom=val(id+'-nom');if(!nom){toast('Écrivez le nom du client');return null}const nc={id:uid(),nom,tel:val(id+'-tel'),note:'',code:newCode()};S.clients.push(nc);cid=nc.id}return cid}
+function pannesPicker(sel){pickPannes=[...(sel||[])];return `<div class="tags" id="pannes">${PANNES.map(p=>`<button type="button" class="tagb ${pickPannes.includes(p)?'on':''}" data-act="panne" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`}
+function repForm(r,pre){const isNew=!r;
+  r=r||{clientId:pre&&pre.clientId||'',marque:pre&&pre.marque||'Apple',modele:pre&&pre.modele||'',imei:'',couleur:'',code:'',pannes:pre&&pre.pannes||[],description:pre&&pre.texte||'',photos:pre&&pre.photos||[],datePrevue:addDays(2),prix:pre&&pre.prix||'',techId:''};
+  sheet(isNew?'Nouvelle réparation':'Modifier la réparation',`<div class="panel">
+  ${clientSelect('rf-c',r.clientId,pre)}
+  <div class="two"><div class="f"><label for="rf-marque">Marque</label><select id="rf-marque">${opts(MARQUES,r.marque)}</select></div><div class="f"><label for="rf-modele">Modèle</label><input id="rf-modele" value="${esc(r.modele)}" placeholder="ex. iPhone 11"></div></div>
+  <div class="two"><div class="f"><label for="rf-imei">IMEI (*#06#)</label><input id="rf-imei" inputmode="numeric" value="${esc(r.imei)}"></div><div class="f"><label for="rf-couleur">Couleur</label><input id="rf-couleur" value="${esc(r.couleur)}"></div></div>
+  <div class="f"><label>Panne</label>${pannesPicker(r.pannes)}</div>
+  <div class="f"><label for="rf-desc">Détails</label><textarea id="rf-desc" placeholder="ex. écran noir mais il vibre">${esc(r.description)}</textarea></div>
+  <div class="f"><label for="rf-code">Code de déverrouillage (gardé secret)</label><input id="rf-code" value="${esc(r.code)}" autocomplete="off"></div>
+  ${photosField(r.photos,'Photos du téléphone à l’arrivée (rayures, écran…)')}
+  <div class="two"><div class="f"><label for="rf-date">Prêt le</label><input type="date" id="rf-date" value="${esc(r.datePrevue)}"></div><div class="f"><label for="rf-prix">Prix (F)</label><input id="rf-prix" inputmode="numeric" value="${esc(r.prix)}" placeholder="après diagnostic"></div></div>
+  ${isNew?`<div class="two"><div class="f"><label for="rf-av">Avance reçue</label><input id="rf-av" inputmode="numeric" placeholder="0"></div><div class="f"><label for="rf-avm">Payé par</label><select id="rf-avm">${opts(MODES)}</select></div></div>`:''}
+  ${(S.equipe||[]).length?`<div class="f"><label for="rf-tech">Technicien</label><select id="rf-tech">${techOpts(r.techId,'—')}</select></div>`:''}</div>
+  <button class="btn block" data-act="save-rep" data-id="${r.id||''}" data-dem="${pre&&pre.demId||''}">${isNew?'Enregistrer et faire le reçu':'Enregistrer'}</button>`)}
+async function saveRep(e){const id=e.dataset.id,demId=e.dataset.dem;const cid=readClient('rf-c');if(cid===null)return;if(!cid)return toast('Choisissez un client');
+  if(!pickPannes.length&&!val('rf-desc'))return toast('Choisissez la panne');
+  let ph=[...pendingPhotos];if(ONLINE&&ph.some(p=>p.startsWith('data:'))){e.disabled=true;e.textContent='Envoi des photos…';ph=await Promise.all(ph.map(u=>upPhoto(u,USER.id)))}
+  const d={clientId:cid,marque:val('rf-marque'),modele:val('rf-modele'),imei:val('rf-imei'),couleur:val('rf-couleur'),code:val('rf-code'),pannes:[...pickPannes],description:val('rf-desc'),photos:ph,datePrevue:val('rf-date'),prix:num(val('rf-prix')),techId:val('rf-tech')};
+  let r;if(id){r=rep_(id);Object.assign(r,d)}else{S.seq=(S.seq||0)+1;const av=num(val('rf-av'));r={id:uid(),no:S.seq,...d,dateRecu:today(),statut:'recu',pieces:[],garantie:S.shop.garantie,dateRendu:'',paiements:av?[{id:uid(),montant:av,mode:val('rf-avm'),date:today(),heure:nowHm()}]:[]};S.reparations.push(r)}
+  if(demId){const dm=S.demandes.find(x=>x.id===demId);if(dm){dm.statut='traite';dm.reponse=dm.reponse||`Votre téléphone est enregistré : reçu N° ${no4(r.no)}.`;demSave(dm)}}
+  save();closeSheet();render();repSheet(r.id);if(!id)toast('Reçu N° '+no4(r.no))}
+function suiviLink(r){return portalLink()+(ONLINE&&S.shopId?'&t='+r.no:'')}
+function recuText(r){const c=client(r.clientId)||{};return `*${S.shop.nom}*${S.shop.adresse?'\n'+S.shop.adresse:''}${S.shop.tel?'\nTél : '+S.shop.tel:''}\n\nREÇU DE RÉPARATION N° ${no4(r.no)}\nDate : ${dateFr(r.dateRecu,{day:'numeric',month:'long',year:'numeric'})}\nClient : ${c.nom||''}\nTéléphone : ${repTel(r)}${r.imei?'\nIMEI : '+r.imei:''}\nPanne : ${(r.pannes||[]).join(', ')}${r.description?' — '+r.description:''}\n${num(r.prix)?'Prix : '+fmt(r.prix)+'\nPayé : '+fmt(sumP(r.paiements))+'\nReste : '+fmt(repReste(r)):'Prix : après diagnostic'}${r.datePrevue?'\nPrêt prévu : '+dateFr(r.datePrevue,{weekday:'long',day:'numeric',month:'long'}):''}\n\nSuivre la réparation : ${suiviLink(r)}\nGarantie ${r.garantie??S.shop.garantie} jours après la réparation. Gardez ce reçu.`}
+function repSheet(id){const r=rep_(id);if(!r)return;const c=client(r.clientId)||{nom:'?',tel:''};const i=RSTEPS.indexOf(r.statut);const rst=repReste(r);const gf=garantieFin(r);
+  const msgPret=`Bonjour ${c.nom}, votre ${repTel(r)} est prêt (reçu N° ${no4(r.no)}).${rst?' Reste à payer : '+fmt(rst)+'.':''} Vous pouvez passer le récupérer chez ${S.shop.nom}. Merci !`;
+  const costP=r.pieces.reduce((a,p)=>a+num(p.cout),0);
+  sheet('Réparation N° '+no4(r.no),`<div class="panel"><div class="sec-h"><div><div class="row-t">${esc(c.nom)}</div><div class="row-s">${esc(repTel(r))}${r.couleur?' · '+esc(r.couleur):''}${r.imei?' · IMEI '+esc(r.imei):''}</div></div><span class="pill st-${r.statut}">${RS[r.statut]}</span></div>
+  <div class="small"><b>${esc((r.pannes||[]).join(', '))}</b>${r.description?' — '+esc(r.description):''}</div>
+  ${r.code?`<div class="small muted">Code : <span data-notr>${esc(r.code)}</span></div>`:''}
+  <div class="small muted">Reçu le ${dateFr(r.dateRecu,{day:'numeric',month:'long'})}${r.datePrevue?' · prêt prévu '+dateFr(r.datePrevue,{day:'numeric',month:'long'}):''}${tech(r.techId)?' · '+esc(tech(r.techId).nom):''}</div>
+  ${gf?`<div class="small">${daysTo(gf)>=0?'🛡️ Sous garantie jusqu’au '+dateFr(gf,{day:'numeric',month:'long'}):'Garantie terminée'}</div>`:''}
+  <div class="lbl">Étape (touchez)</div>
+  <div class="steps">${RSTEPS.map((s,k)=>`<button class="step ${k<=i?'done':''}" data-act="rep-st" data-id="${r.id}" data-v="${s}"><i></i>${RS[s]}</button>`).join('')}</div></div>
+  ${r.photos&&r.photos.length?gallery(r):''}
+  <div class="panel"><div class="money"><div><b>${fmt(r.prix)}</b><span>Prix</span></div><div><b>${fmt(sumP(r.paiements))}</b><span>Payé</span></div><div><b style="color:${rst?'var(--bad)':'var(--ok)'}">${fmt(rst)}</b><span>Reste</span></div></div>
+  ${r.paiements.length?`<div class="kv" style="grid-template-columns:1fr">${r.paiements.map(p=>`<div><span>${dateFr(p.date,{day:'numeric',month:'short'})} · ${esc(p.mode)}</span><b>${fmt(p.montant)}</b></div>`).join('')}</div>`:''}
+  ${rst||!num(r.prix)?`<div class="two"><div class="f"><label for="pay-m">Paiement</label><input id="pay-m" inputmode="numeric" placeholder="${rst||''}"></div><div class="f"><label for="pay-mo">Par</label><select id="pay-mo">${opts(MODES)}</select></div></div><button class="btn gold" data-act="rep-pay" data-id="${r.id}">Ajouter le paiement</button>`:''}</div>
+  <div class="panel"><div class="sec-h"><h3>Pièces utilisées</h3><span class="small muted">coût ${fmt(costP)} · gagné ${fmt(num(r.prix)-costP)}</span></div>
+  ${r.pieces.length?`<div class="kv" style="grid-template-columns:1fr">${r.pieces.map((p,k)=>`<div><span>${esc(p.nom)}</span><b>${fmt(p.cout)} <button class="x" style="width:26px;height:26px;font-size:14px" data-act="rep-unpiece" data-id="${r.id}" data-v="${k}" aria-label="Retirer">×</button></b></div>`).join('')}</div>`:''}
+  <div class="f"><label for="rp-add">Ajouter une pièce du stock</label><select id="rp-add" data-rep="${r.id}"><option value="">— Choisir —</option>${S.pieces.map(p=>`<option value="${p.id}">${esc(p.nom)} · ${num(p.qte)} en stock</option>`).join('')}</select></div></div>
+  <div class="btns">${r.statut==='pret'&&c.tel?`<a class="btn wa" href="${waLink(c.tel,msgPret)}" target="_blank" rel="noopener">${I.wa} Dire au client que c’est prêt</a>`:''}
+  ${c.tel?`<a class="btn wa" href="${waLink(c.tel,recuText(r))}" target="_blank" rel="noopener">${I.wa} Envoyer le reçu</a>`:''}
+  ${r.statut==='pret'?`<button class="btn gold" data-act="rep-st" data-id="${r.id}" data-v="livre">Rendu au client</button>`:''}
+  <button class="btn ghost" data-act="edit-rep" data-id="${r.id}">Modifier</button>${c.id?`<button class="btn ghost" data-act="client" data-id="${c.id}">Fiche client</button>`:''}</div>
+  <div class="btns"><button class="btn danger sm" data-act="rep-st" data-id="${r.id}" data-v="annule">Annuler la réparation</button><button class="btn danger sm" data-act="del-rep" data-id="${r.id}">Supprimer</button></div>`)}
+
+/* ---------- feuilles : téléphones, pièces, ventes ---------- */
+function telForm(t,pre){const isNew=!t;t=t||{marque:pre&&pre.marque||'Apple',modele:pre&&pre.modele||'',memoire:pre&&pre.memoire||'128 Go',batterie:pre&&pre.batterie||'',etat:pre&&pre.etat||'Très bon',couleur:'',imei:'',prixAchat:pre&&pre.prixAchat||'',prix:'',photos:pre&&pre.photos||[],garantie:'1 mois',desc:'',fournisseur:pre&&pre.fournisseur||{nom:'',tel:'',cni:''},nouveau:true};
+  sheet(isNew?'Nouveau téléphone à vendre':'Modifier le téléphone',`<div class="panel">${photosField(t.photos&&t.photos.length?t.photos:(t.photo?[t.photo]:[]))}
+  <div class="two"><div class="f"><label for="tf-marque">Marque</label><select id="tf-marque">${opts(MARQUES,t.marque)}</select></div><div class="f"><label for="tf-modele">Modèle</label><input id="tf-modele" value="${esc(t.modele)}" placeholder="ex. iPhone 12"></div></div>
+  <div class="two"><div class="f"><label for="tf-mem">Mémoire</label><select id="tf-mem">${opts(MEMS,t.memoire)}</select></div><div class="f"><label for="tf-bat">Batterie (%)</label><input id="tf-bat" inputmode="numeric" value="${esc(t.batterie)}" placeholder="ex. 88"></div></div>
+  <div class="two"><div class="f"><label for="tf-etat">État</label><select id="tf-etat">${opts(ETATS,t.etat)}</select></div><div class="f"><label for="tf-coul">Couleur</label><input id="tf-coul" value="${esc(t.couleur)}"></div></div>
+  <div class="f"><label for="tf-imei">IMEI</label><input id="tf-imei" inputmode="numeric" value="${esc(t.imei)}"></div>
+  <div class="two"><div class="f"><label for="tf-achat">Prix d’achat (F)</label><input id="tf-achat" inputmode="numeric" value="${esc(t.prixAchat)}"></div><div class="f"><label for="tf-prix">Prix de vente (F)</label><input id="tf-prix" inputmode="numeric" value="${esc(t.prix)}"></div></div>
+  <div class="two"><div class="f"><label for="tf-gar">Garantie</label><input id="tf-gar" value="${esc(t.garantie||'')}" placeholder="ex. 1 mois"></div><div class="f"><label for="tf-desc">Note pour les clients</label><input id="tf-desc" value="${esc(t.desc||'')}" placeholder="ex. avec boîte et chargeur"></div></div>
+  <div class="two"><div class="f"><label for="tf-min">Prix minimum (secret, pour discuter)</label><input id="tf-min" inputmode="numeric" value="${esc(t.prixMin||'')}"></div><div class="f" style="justify-content:flex-end"><label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="tf-disc" ${t.discuter!==false?'checked':''}> Prix à discuter</label></div></div>
+  <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="tf-new" ${t.nouveau?'checked':''}> Afficher « Nouveau »</label></div>
+  <div class="panel"><h3>Acheté à (privé, les clients ne le voient pas)</h3><div class="two"><div class="f"><label for="tf-fn">Nom du vendeur</label><input id="tf-fn" value="${esc(t.fournisseur.nom)}"></div><div class="f"><label for="tf-ft">Téléphone</label><input id="tf-ft" inputmode="tel" value="${esc(t.fournisseur.tel)}"></div></div>
+  <div class="f"><label for="tf-cni">N° de carte d’identité du vendeur</label><input id="tf-cni" value="${esc(t.fournisseur.cni||'')}"></div><p class="note" style="margin:0">Notez toujours l’IMEI et la carte d’identité de celui qui vous vend un téléphone : ça vous protège si le téléphone était volé.</p></div>
+  <button class="btn block" data-act="save-tel" data-id="${t.id||''}" data-dem="${pre&&pre.demId||''}">Enregistrer</button>${t.id?`<button class="btn danger sm" data-act="del-tel" data-id="${t.id}">Retirer ce téléphone</button>`:''}`)}
+function telSheet(id){const t=tel_(id);if(!t)return;
+  sheet(telNom(t),`${gallery(t)}<div class="panel"><div class="sec-h"><span class="price" style="font-size:22px">${fmt(t.prix)}</span><span class="pill st-${t.statut}">${PS[t.statut]}</span></div>
+  <div class="kv"><div><span>Mémoire</span><b>${esc(t.memoire)}</b></div><div><span>Batterie</span><b>${t.batterie?battHtml(t.batterie):'—'}</b></div><div><span>État</span><b>${esc(t.etat)}</b></div><div><span>Couleur</span><b>${esc(t.couleur||'—')}</b></div></div>
+  ${t.imei?`<div class="small muted">IMEI ${esc(t.imei)}</div>`:''}<div class="small">${num(t.prixMin)?'Minimum <b>'+fmt(t.prixMin)+'</b> · ':''}Acheté ${fmt(t.prixAchat)} · gain prévu <b>${fmt(num(t.prix)-num(t.prixAchat))}</b></div>
+  ${t.fournisseur&&t.fournisseur.nom?`<div class="small muted">Acheté à ${esc(t.fournisseur.nom)} ${esc(t.fournisseur.tel||'')}${t.fournisseur.cni?' · CNI '+esc(t.fournisseur.cni):''}</div>`:''}</div>
+  <div class="btns">${t.statut!=='vendu'?`<button class="btn gold" data-act="sell-tel" data-id="${t.id}">Vendre ce téléphone</button>`:''}${t.statut==='dispo'?`<button class="btn ghost" data-act="tel-st" data-id="${t.id}" data-v="reserve">Réserver</button>`:t.statut==='reserve'?`<button class="btn ghost" data-act="tel-st" data-id="${t.id}" data-v="dispo">Remettre disponible</button>`:''}<button class="btn ghost" data-act="edit-tel" data-id="${t.id}">Modifier</button></div>`)}
+function pieceForm(p){p=p||{nom:'',modele:'',qte:1,cout:'',prix:''};
+  sheet(p.id?'Modifier la pièce':'Nouvelle pièce',`<div class="panel"><div class="f"><label for="pf-nom">Pièce</label><input id="pf-nom" value="${esc(p.nom)}" placeholder="ex. Écran iPhone 11"></div><div class="f"><label for="pf-mod">Pour quels modèles</label><input id="pf-mod" value="${esc(p.modele)}"></div>
+  <div class="two"><div class="f"><label for="pf-qte">Quantité</label><input id="pf-qte" inputmode="numeric" value="${esc(p.qte)}"></div><div class="f"><label for="pf-cout">Prix d’achat (F)</label><input id="pf-cout" inputmode="numeric" value="${esc(p.cout)}"></div></div>
+  <div class="f"><label for="pf-prix">Prix pour le client, pose comprise (F)</label><input id="pf-prix" inputmode="numeric" value="${esc(p.prix)}"></div></div>
+  <button class="btn block" data-act="save-piece" data-id="${p.id||''}">Enregistrer</button>${p.id?`<button class="btn danger sm" data-act="del-piece" data-id="${p.id}">Retirer cette pièce</button>`:''}`)}
+function saleSheet(){const e=enc;const t=e.telId&&tel_(e.telId);
+  sheet(t?'Vendre '+telNom(t):'Vendre',`<div class="panel">${clientSelect('sv-c',e.clientId||'',null).replace('<option value="">— Choisir —</option>','<option value="">Client de passage</option>')}
+  ${t?'':`<div class="f"><label for="sv-tel">Téléphone du stock (facultatif)</label><select id="sv-tel" data-sale="tel"><option value="">— Aucun —</option>${S.telephones.filter(x=>x.statut!=='vendu').map(x=>`<option value="${x.id}">${esc(telNom(x)+' '+x.memoire)} · ${fmt(x.prix)}</option>`).join('')}</select></div>`}
+  ${t?`<div class="small muted">Prix affiché ${fmt(t.prix)}${num(t.prixMin)?' · votre minimum '+fmt(t.prixMin):''} · vous avez discuté ? changez le prix ci-dessous.</div>`:''}<div class="lbl">Articles</div><div style="display:flex;flex-direction:column;gap:6px">${e.lignes.map((l,k)=>`<div class="two" style="grid-template-columns:1fr 110px 34px;align-items:center"><input class="search" style="padding:9px 10px" data-sale="ln" data-k="${k}" value="${esc(l.nom)}" aria-label="Article"><input class="search" style="padding:9px 10px" data-sale="lp" data-k="${k}" inputmode="numeric" value="${l.prix}" aria-label="Prix"><button class="x" data-act="sv-del" data-v="${k}" aria-label="Retirer">×</button></div>`).join('')}</div>
+  <button class="btn ghost sm" data-act="sv-add">+ Accessoire (chargeur, coque…)</button>
+  <div class="two"><div class="f"><label for="sv-paye">Payé maintenant (F)</label><input id="sv-paye" inputmode="numeric" placeholder="tout"></div><div class="f"><label for="sv-gar">Garantie</label><input id="sv-gar" value="${esc(t&&t.garantie||'')}" placeholder="ex. 1 mois"></div></div>
+  <div class="lbl">Payé par</div><div class="modes">${MODES.map(m=>`<button class="mode-b ${e.mode===m?'on':''}" data-act="sv-mode" data-v="${m}">${m}</button>`).join('')}</div>
+  <div class="sec-h"><span class="lbl">Total</span><span class="big-total" id="sv-tot">${fmt(e.lignes.reduce((a,l)=>a+num(l.prix),0))}</span></div>
+  <p class="note" style="margin:0">Si le client paie en plusieurs fois, écrivez seulement ce qu’il paie maintenant : le reste est noté comme crédit.</p></div>
+  <button class="btn gold block" data-act="sv-save">Enregistrer la vente</button>`)}
+function readSale(){if(!enc)return;enc.clientId=val('sv-c');document.querySelectorAll('[data-sale="ln"]').forEach(i=>{enc.lignes[+i.dataset.k].nom=i.value});document.querySelectorAll('[data-sale="lp"]').forEach(i=>{enc.lignes[+i.dataset.k].prix=num(i.value)})}
+function openSale(telId,clientId,prix){const t=telId&&tel_(telId);enc={telId:t?t.id:'',clientId:clientId||'',mode:'Espèces',lignes:t?[{nom:telNom(t)+' '+t.memoire,prix:num(prix)||num(t.prix)}]:[{nom:'',prix:0}]};saleSheet()}
+function venteSheet(id){const v=S.ventes.find(x=>x.id===id);if(!v)return;const c=client(v.clientId);const r=venteReste(v);
+  const recu=`*${S.shop.nom}*\nReçu de vente du ${dateFr(v.date,{day:'numeric',month:'long',year:'numeric'})}\n\n${v.lignes.map(l=>l.nom+' : '+fmt(l.prix)).join('\n')}${v.imei?'\nIMEI : '+v.imei:''}\nTOTAL : ${fmt(v.total)}\nPayé : ${fmt(sumP(v.paiements))}${r?'\nReste : '+fmt(r):''}${v.garantie?'\nGarantie : '+v.garantie:''}\n\nMerci et à bientôt !`;
+  sheet(venteNom(v),`<div class="panel"><div class="small muted">${dateFr(v.date,{weekday:'long',day:'numeric',month:'long'})} · ${esc(v.heure||'')}</div><div class="kv" style="grid-template-columns:1fr">${v.lignes.map(l=>`<div><span>${esc(l.nom)}</span><b>${fmt(l.prix)}</b></div>`).join('')}<div><span><b>Total</b></span><b>${fmt(v.total)}</b></div></div>
+  <div class="money"><div><b>${fmt(v.total)}</b><span>Total</span></div><div><b>${fmt(sumP(v.paiements))}</b><span>Payé</span></div><div><b style="color:${r?'var(--bad)':'var(--ok)'}">${fmt(r)}</b><span>Reste</span></div></div>
+  ${r?`<div class="two"><div class="f"><label for="pay-m">Paiement</label><input id="pay-m" inputmode="numeric" placeholder="${r}"></div><div class="f"><label for="pay-mo">Par</label><select id="pay-mo">${opts(MODES)}</select></div></div><button class="btn gold" data-act="vente-pay" data-id="${v.id}">Ajouter le paiement</button>`:''}</div>
+  ${c&&c.tel?`<a class="btn wa block" href="${waLink(c.tel,recu)}" target="_blank" rel="noopener">${I.wa} Envoyer le reçu</a>`:''}
+  <button class="btn danger sm" data-act="del-vente" data-id="${v.id}">Supprimer cette vente</button>`)}
+function clientForm(c){c=c||{nom:'',tel:'',note:''};
+  sheet(c.id?'Modifier le client':'Nouveau client',`<div class="panel"><div class="f"><label for="cl-nom">Nom et prénom</label><input id="cl-nom" value="${esc(c.nom)}"></div><div class="f"><label for="cl-tel">Téléphone (WhatsApp)</label><input id="cl-tel" inputmode="tel" value="${esc(c.tel)}" placeholder="77 000 00 00"></div><div class="f"><label for="cl-note">Note</label><textarea id="cl-note">${esc(c.note)}</textarea></div></div><button class="btn block" data-act="save-client" data-id="${c.id||''}">Enregistrer</button>`)}
+function clientSheet(id){const c=client(id);if(!c)return;const reps=S.reparations.filter(r=>r.clientId===id).sort((a,b)=>b.no-a.no);const vs=S.ventes.filter(v=>v.clientId===id);const du=clientDu(id);
+  sheet(c.nom,`<div class="panel"><div class="row-s">${esc(c.tel)}${du?` · <b class="bad">doit ${fmt(du)}</b>`:''}</div>${c.note?`<div class="small">${esc(c.note)}</div>`:''}
+  <div class="btns">${c.tel?`<a class="btn wa sm" href="${waLink(c.tel,'Bonjour '+c.nom+', ')}" target="_blank" rel="noopener">${I.wa} WhatsApp</a>`:''}<button class="btn ghost sm" data-act="edit-client" data-id="${c.id}">Modifier</button>${showRep()?`<button class="btn sm" data-act="new-rep-for" data-id="${c.id}">+ Réparation</button>`:''}${showVente()?`<button class="btn gold sm" data-act="new-sale-for" data-id="${c.id}">+ Vente</button>`:''}</div></div>
+  <div class="panel"><div class="sec-h"><h3>Espace client</h3><span class="code">${esc(c.code||'—')}</span></div><div class="small muted">Avec son numéro et ce code, ${esc(c.nom.split(' ')[0])} voit toutes ses réparations et ses achats.</div><div class="btns">${c.tel?`<a class="btn wa sm" href="${waLink(c.tel,accessMsg(c))}" target="_blank" rel="noopener">${I.wa} Envoyer l’accès</a>`:''}<button class="btn ghost sm" data-act="new-code" data-id="${c.id}">Nouveau code</button></div></div>
+  ${reps.length?`<section class="sec"><h3>Réparations</h3><div class="timeline">${reps.map(r=>repRow(r,false)).join('')}</div></section>`:''}
+  ${vs.length?`<section class="sec"><h3>Achats</h3><div class="list">${vs.map(v=>`<button class="row" data-act="vente" data-id="${v.id}"><div class="row-main"><div class="row-t">${esc(v.lignes.map(l=>l.nom).join(' + '))}</div><div class="row-s">${dateFr(v.date,{day:'numeric',month:'long'})}</div></div><b>${fmt(v.total)}</b></button>`).join('')}</div></section>`:''}
+  <button class="btn danger sm" data-act="del-client" data-id="${c.id}">Supprimer le client</button>`)}
+function ensureClient(d){if(client(d.clientId))return d.clientId;const ph=String(d.telV||'').replace(/\D/g,'').slice(-9);let ex=ph.length===9&&S.clients.find(c=>String(c.tel).replace(/\D/g,'').slice(-9)===ph);
+  if(!ex){ex={id:uid(),nom:d.nomV||'Nouveau client',tel:d.telV||'',note:'',code:newCode()};S.clients.push(ex);save()}return ex.id}
+function demSheet(id){const d=S.demandes.find(x=>x.id===id);const cl=dCl(d);const x=d.data||{};let extra='';
+  if(d.type==='devis')extra=`<button class="btn gold block" data-act="dem-rep" data-id="${d.id}">Le client apporte le téléphone : créer la réparation</button>`;
+  if(d.type==='vente')extra=`<button class="btn gold block" data-act="dem-buy" data-id="${d.id}">Je l’achète : ajouter au stock</button>`;
+  if(d.type==='achat'){const t=tel_(x.telId);extra=t?`<div class="panel"><div class="row-t">${esc(telNom(t))} · ${esc(t.memoire)}</div><div class="small">${fmt(t.prix)} · <span class="pill st-${t.statut}">${PS[t.statut]}</span></div><div class="btns">${t.statut==='dispo'?`<button class="btn ghost" data-act="dem-reserve" data-id="${d.id}">Le réserver pour ce client</button>`:''}${t.statut!=='vendu'?`<button class="btn gold" data-act="dem-sell" data-id="${d.id}">Vendre</button>`:''}</div></div>`:'<div class="small muted">Ce téléphone n’est plus dans le stock.</div>'}
+  sheet((DT[d.type]||'Message')+' · '+cl.nom,`${d.photo?`<img class="photo-big" src="${d.photo}" alt="">`:''}${x.photos&&x.photos.length>1?gallery({photos:x.photos,nom:''}):''}<div class="panel">${cl.visiteur?`<div class="reply"><b>Nouveau client</b> : ${esc(cl.nom)} · ${esc(cl.tel)}. Il sera ajouté à vos clients si vous continuez.</div>`:''}
+  <div>${esc(demSummary(d))}</div><div class="small muted">Reçu le ${dateFr(d.date,{day:'numeric',month:'long'})}</div></div>${extra}
+  <div class="panel">${['devis','vente','achat'].includes(d.type)?`<div class="f"><label for="dm-prix">${d.type==='devis'?'Votre prix pour la réparation (F)':d.type==='vente'?'Votre offre pour son téléphone (F)':'Votre prix pour lui (F)'}</label><input id="dm-prix" inputmode="numeric" value="${esc(x.contre||'')}" placeholder="${d.type==='achat'&&tel_(x.telId)?num(tel_(x.telId).prix):''}">${d.type==='achat'&&tel_(x.telId)&&num(tel_(x.telId).prixMin)?`<div class="small muted">Votre minimum : ${fmt(tel_(x.telId).prixMin)}</div>`:''}</div>`:''}<div class="f"><label for="dm-rep">Votre réponse (le client la voit sur sa page s’il a un code)</label><textarea id="dm-rep" placeholder="${d.type==='devis'?'ex. Écran iPhone 13 : 45 000 F, prêt en 1 jour.':d.type==='vente'?'ex. Je peux vous le prendre à 120 000 F.':''}">${esc(d.reponse)}</textarea></div><div class="btns"><button class="btn" data-act="dem-reply" data-id="${d.id}">Répondre</button>${cl.tel?`<button class="btn wa" data-act="dem-wa" data-id="${d.id}">${I.wa} WhatsApp</button>`:''}</div></div>`)}
+function settings(){const s=S.shop;
+  sheet('Réglages du magasin',`<div class="panel"><div class="f"><label for="st-nom">Nom du magasin</label><input id="st-nom" value="${esc(s.nom)}"></div>
+  <div class="two"><div class="f"><label for="st-tel">Téléphone WhatsApp</label><input id="st-tel" inputmode="tel" value="${esc(s.tel)}"></div><div class="f"><label for="st-v">Ville</label><input id="st-v" value="${esc(s.ville)}"></div></div>
+  <div class="f"><label for="st-adr">Adresse / marché</label><input id="st-adr" value="${esc(s.adresse||'')}"></div>
+  <div class="two"><div class="f"><label for="st-act">Je fais</label><select id="st-act"><option value="tout" ${s.activite==='tout'?'selected':''}>Réparation et vente</option><option value="repar" ${s.activite==='repar'?'selected':''}>Réparation seulement</option><option value="vente" ${s.activite==='vente'?'selected':''}>Vente seulement</option></select></div><div class="f"><label for="st-gar">Garantie réparation (jours)</label><input id="st-gar" inputmode="numeric" value="${esc(s.garantie)}"></div></div></div>
+  <div class="panel"><h3>Techniciens / vendeurs</h3><div class="list" style="box-shadow:none;background:var(--surface2)">${(S.equipe||[]).map(e=>`<div class="row"><div class="av">${initials(e.nom)}</div><div class="row-main"><div class="row-t">${esc(e.nom)}</div></div><button class="btn sm ghost" data-act="del-emp" data-id="${e.id}">Retirer</button></div>`).join('')||'<div class="empty">Vous travaillez seul ? Pas besoin d’en ajouter.</div>'}</div>
+  <div class="two"><div class="f"><label for="st-emp">Nouvelle personne</label><input id="st-emp" placeholder="ex. Modou"></div><div style="display:flex;align-items:flex-end"><button class="btn ghost block" data-act="add-emp">Ajouter</button></div></div></div>
+  <button class="btn block" data-act="save-settings">Enregistrer</button>${ONLINE?onlineSettings():''}`)}
+
+/* ---------- feuilles côté client ---------- */
+function cDevis(){const c=me();sheet('Devis de réparation',`<div class="panel"><div class="two"><div class="f"><label for="cd-marque">Marque</label><select id="cd-marque">${opts(MARQUES,'Apple')}</select></div><div class="f"><label for="cd-modele">Modèle</label><input id="cd-modele" placeholder="ex. iPhone 11"></div></div>
+  <div class="f"><label>Qu’est-ce qui ne va pas ?</label>${pannesPicker([])}</div><div class="f"><label for="cd-t">Détails</label><textarea id="cd-t" placeholder="ex. il est tombé, l’écran est noir"></textarea></div>
+  ${photosField([],'Photo du téléphone (facultatif)')}${c?'':guestFields()}<p class="note" style="margin:0">Le magasin vous envoie le prix ${c?'dans vos messages':'sur WhatsApp'}.</p></div><button class="btn gold block" data-act="cd-send">Demander le prix</button>`)}
+function cVendre(){const c=me();sheet('Vendre mon téléphone',`<div class="panel">${photosField([],'Photos du téléphone (devant, derrière, écran allumé)')}
+  <div class="two"><div class="f"><label for="cv-marque">Marque</label><select id="cv-marque">${opts(MARQUES,'Apple')}</select></div><div class="f"><label for="cv-modele">Modèle</label><input id="cv-modele" placeholder="ex. iPhone 12"></div></div>
+  <div class="two"><div class="f"><label for="cv-mem">Mémoire</label><select id="cv-mem">${opts(MEMS,'128 Go')}</select></div><div class="f"><label for="cv-bat">Batterie (%)</label><input id="cv-bat" inputmode="numeric" placeholder="ex. 85"></div></div>
+  <div class="two"><div class="f"><label for="cv-etat">État</label><select id="cv-etat">${opts(ETATS,'Très bon')}</select></div><div class="f"><label for="cv-prix">Votre prix (F)</label><input id="cv-prix" inputmode="numeric"></div></div>
+  <div class="f"><label for="cv-t">Détails</label><input id="cv-t" placeholder="ex. avec boîte, jamais réparé"></div>${c?'':guestFields()}
+  <p class="note" style="margin:0">Le magasin regarde et vous fait une offre. Apportez votre carte d’identité le jour de la vente.</p></div><button class="btn gold block" data-act="cv-send">Proposer au magasin</button>`)}
+function cTelSheet(id){const t=tel_(id);const c=me();
+  sheet(telNom(t),`${gallery(t)}<div class="panel"><div class="sec-h"><span class="price" style="font-size:22px">${fmt(t.prix)}</span><span class="pill st-${t.statut}">${PS[t.statut]}</span></div>
+  <div class="kv"><div><span>Mémoire</span><b>${esc(t.memoire)}</b></div><div><span>Batterie</span><b>${t.batterie?battHtml(t.batterie):'—'}</b></div><div><span>État</span><b>${esc(t.etat)}</b></div><div><span>Couleur</span><b>${esc(t.couleur||'—')}</b></div></div>
+  ${t.garantie?`<div class="small">🛡️ Garantie : ${esc(t.garantie)}</div>`:''}${t.desc?`<div class="small">${esc(t.desc)}</div>`:''}
+  ${t.statut==='reserve'?'<div class="small muted">Déjà réservé : vous pouvez demander s’il se libère.</div>':''}
+  ${t.discuter!==false?`<div class="f"><label for="ca-offre">Votre offre (F) · facultatif, le prix se discute</label><input id="ca-offre" inputmode="numeric" placeholder="ex. ${Math.round(num(t.prix)*0.9/1000)*1000}"></div>`:''}
+  <div class="f"><label for="ca-t">Message (facultatif)</label><input id="ca-t" placeholder="ex. je passe ce soir"></div>${c?'':guestFields()}</div>
+  <button class="btn gold block" data-act="ca-send" data-id="${t.id}">Je le veux</button>`)}
+function cQuestion(){sheet('Poser une question',`<div class="panel"><div class="f"><label for="cm-t">Votre question</label><textarea id="cm-t"></textarea></div>${me()?'':guestFields()}</div><button class="btn block" data-act="cq-send">Envoyer</button>`)}
+function cSuivi(no){sheet('Suivre ma réparation',`<div class="panel"><p class="small" style="margin:0">Écrivez le <b>N° du reçu</b> et votre numéro de téléphone.</p><div class="two"><div class="f"><label for="su-no">N° du reçu</label><input id="su-no" inputmode="numeric" value="${esc(no||'')}" placeholder="ex. 0042"></div><div class="f"><label for="su-tel">Votre numéro</label><input id="su-tel" inputmode="tel" value="${esc(guest().tel||'')}" placeholder="77 000 00 00"></div></div></div><button class="btn block" data-act="su-go">Voir où en est mon téléphone</button><div id="su-res"></div>`)}
+function guestCheck(){const nom=val('vz-nom'),tel=val('vz-tel');if(nom.length<2){toast('Écrivez votre nom');return null}if(tel.replace(/\D/g,'').length<9){toast('Écrivez votre numéro WhatsApp');return null}saveGuest(nom,tel);return {nom,tel}}
+async function clientSend(d,btn){const c=me();
+  if(!c){const g=guestCheck();if(!g)return;d.clientId=null;d.nomV=g.nom;d.telV=g.tel}else d.clientId=c.id;
+  return sendDem(d,btn)}
+
+/* ---------- actions ---------- */
+const A={
+  mode:e=>{mode=e.dataset.v;view=mode==='shop'?'accueil':'c-direct';q='';render();scrollTo(0,0)},
+  tab:e=>{view=e.dataset.v;q='';closeSheet();render();scrollTo(0,0)},
+  close:()=>closeSheet(),
+  'clear-demo':()=>{S=fixState({v:1,demo:false,seq:0,shop:{nom:'Mon magasin',tel:'',ville:'',adresse:'',activite:'tout',garantie:30},equipe:[],clients:[],reparations:[],pieces:[],telephones:[],ventes:[],demandes:[]});viewAs=null;save();render();settings();toast('Exemples effacés')},
+  settings,
+  'save-settings':()=>{S.shop={...S.shop,nom:val('st-nom')||'Mon magasin',tel:val('st-tel'),ville:val('st-v'),adresse:val('st-adr'),activite:val('st-act')||'tout',garantie:Math.max(0,num(val('st-gar')))};save();closeSheet();view='accueil';render();toast('Enregistré')},
+  'add-emp':()=>{const n=val('st-emp');if(!n)return toast('Écrivez le prénom');S.equipe.push({id:uid(),nom:n});save();settings()},
+  'del-emp':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Sûr ?';return}S.equipe=S.equipe.filter(x=>x.id!==e.dataset.id);save();settings()},
+  'rep-f':e=>{repF=e.dataset.v;render()},
+  seg:e=>{stockSeg=e.dataset.v;render()},
+  'go-pieces':()=>{view='stock';stockSeg='pc';render()},
+  'new-rep':()=>repForm(),
+  'new-rep-for':e=>repForm(null,{clientId:e.dataset.id}),
+  'edit-rep':e=>repForm(rep_(e.dataset.id)),
+  'save-rep':e=>saveRep(e),
+  rep:e=>repSheet(e.dataset.id),
+  panne:e=>{const v=e.dataset.v;pickPannes=pickPannes.includes(v)?pickPannes.filter(x=>x!==v):[...pickPannes,v];e.classList.toggle('on')},
+  'rep-st':e=>{const r=rep_(e.dataset.id);const v=e.dataset.v;if(v==='annule'&&delArm!=='an'+r.id){delArm='an'+r.id;e.textContent='Touchez encore pour annuler';return}r.statut=v;if(v==='pret')r.datePret=today();if(v==='livre')r.dateRendu=today();save();render();repSheet(r.id);if(v==='pret')toast('Prêt ! Prévenez le client sur WhatsApp');if(v==='livre')toast('Rendu · garantie jusqu’au '+dateFr(garantieFin(r),{day:'numeric',month:'short'}))},
+  'rep-pay':e=>{const r=rep_(e.dataset.id);const m=num(val('pay-m'));if(!m)return toast('Écrivez le montant');r.paiements.push({id:uid(),montant:m,mode:val('pay-mo'),date:today(),heure:nowHm()});save();render();repSheet(r.id);toast(repReste(r)?'Paiement ajouté':'Tout est payé')},
+  'rep-unpiece':e=>{const r=rep_(e.dataset.id);const k=+e.dataset.v;const pc=r.pieces[k];const p=pc&&piece(pc.pieceId);if(p)p.qte=num(p.qte)+1;r.pieces.splice(k,1);save();repSheet(r.id)},
+  'del-rep':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Touchez encore pour supprimer';return}S.reparations=S.reparations.filter(r=>r.id!==e.dataset.id);save();closeSheet();render()},
+  'new-tel':()=>telForm(),
+  tel:e=>telSheet(e.dataset.id),
+  'edit-tel':e=>telForm(tel_(e.dataset.id)),
+  'save-tel':async e=>{const modele=val('tf-modele');if(!modele)return toast('Écrivez le modèle');if(!num(val('tf-prix')))return toast('Écrivez le prix de vente');let ph=[...pendingPhotos];if(ONLINE&&ph.some(p=>p.startsWith('data:'))){e.disabled=true;e.textContent='Envoi des photos…';ph=await Promise.all(ph.map(u=>upPhoto(u,USER.id)))}
+    const d={marque:val('tf-marque'),modele,memoire:val('tf-mem'),batterie:num(val('tf-bat'))||'',etat:val('tf-etat'),couleur:val('tf-coul'),imei:val('tf-imei'),prixAchat:num(val('tf-achat')),prix:num(val('tf-prix')),garantie:val('tf-gar'),desc:val('tf-desc'),photo:ph[0]||'',photos:ph,nouveau:$('#tf-new').checked,prixMin:num(val('tf-min')),discuter:$('#tf-disc').checked,fournisseur:{nom:val('tf-fn'),tel:val('tf-ft'),cni:val('tf-cni')}};
+    if(e.dataset.id)Object.assign(tel_(e.dataset.id),d);else S.telephones.unshift({id:uid(),...d,statut:'dispo',dateAchat:today()});
+    if(e.dataset.dem){const dm=S.demandes.find(x=>x.id===e.dataset.dem);if(dm){dm.statut='traite';dm.reponse=dm.reponse||'Merci, nous avons acheté votre téléphone.';demSave(dm)}}
+    save();closeSheet();view='stock';stockSeg='tel';render();toast('Téléphone enregistré')},
+  'del-tel':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Touchez encore pour retirer';return}S.telephones=S.telephones.filter(t=>t.id!==e.dataset.id);save();closeSheet();render()},
+  'tel-st':e=>{const t=tel_(e.dataset.id);t.statut=e.dataset.v;save();render();telSheet(t.id)},
+  'sell-tel':e=>openSale(e.dataset.id),
+  'new-sale':()=>openSale(),
+  'new-sale-for':e=>openSale('',e.dataset.id),
+  'sv-add':()=>{readSale();enc.lignes.push({nom:'',prix:0});saleSheet()},
+  'sv-del':e=>{readSale();enc.lignes.splice(+e.dataset.v,1);if(!enc.lignes.length)enc.lignes.push({nom:'',prix:0});saleSheet()},
+  'sv-mode':e=>{readSale();enc.mode=e.dataset.v;saleSheet()},
+  'sv-save':()=>{readSale();const cid=enc.clientId==='__new'?readClient('sv-c'):enc.clientId;if(cid===null)return;const lignes=enc.lignes.filter(l=>l.nom||num(l.prix)).map(l=>({nom:l.nom||'Article',prix:num(l.prix)}));if(!lignes.length)return toast('Ajoutez un article');
+    const total=lignes.reduce((a,l)=>a+l.prix,0);const pv=val('sv-paye');const paye=pv===''?total:Math.min(total,num(pv));const t=enc.telId&&tel_(enc.telId);
+    if(t&&num(t.prixMin)&&lignes[0].prix<num(t.prixMin)&&delArm!=='min'){delArm='min';return toast('En dessous de votre minimum ('+fmt(t.prixMin)+') : touchez encore pour vendre quand même')}
+    const v={id:uid(),date:today(),heure:nowHm(),clientId:cid||null,nom:cid?'':'Client de passage',type:t?'telephone':'accessoire',telId:t?t.id:'',imei:t?t.imei:'',lignes,total,cout:t?num(t.prixAchat):0,garantie:val('sv-gar'),paiements:paye?[{id:uid(),montant:paye,mode:enc.mode,date:today(),heure:nowHm()}]:[]};
+    if(!cid&&paye<total)return toast('Pour un crédit, choisissez le client');
+    S.ventes.push(v);if(t)t.statut='vendu';save();closeSheet();render();venteSheet(v.id);toast(paye<total?'Vente enregistrée · reste '+fmt(total-paye):'Vente enregistrée')},
+  vente:e=>venteSheet(e.dataset.id),
+  'vente-pay':e=>{const v=S.ventes.find(x=>x.id===e.dataset.id);const m=num(val('pay-m'));if(!m)return toast('Écrivez le montant');v.paiements.push({id:uid(),montant:m,mode:val('pay-mo'),date:today(),heure:nowHm()});save();render();venteSheet(v.id)},
+  'del-vente':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Touchez encore pour supprimer';return}const v=S.ventes.find(x=>x.id===e.dataset.id);if(v&&v.telId&&tel_(v.telId))tel_(v.telId).statut='dispo';S.ventes=S.ventes.filter(x=>x.id!==e.dataset.id);save();closeSheet();render()},
+  'new-piece':()=>pieceForm(),
+  piece:e=>pieceForm(piece(e.dataset.id)),
+  'save-piece':e=>{const nom=val('pf-nom');if(!nom)return toast('Écrivez le nom de la pièce');const d={nom,modele:val('pf-mod'),qte:num(val('pf-qte')),cout:num(val('pf-cout')),prix:num(val('pf-prix'))};if(e.dataset.id)Object.assign(piece(e.dataset.id),d);else S.pieces.push({id:uid(),...d});save();closeSheet();render();toast('Pièce enregistrée')},
+  'del-piece':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Touchez encore pour retirer';return}S.pieces=S.pieces.filter(p=>p.id!==e.dataset.id);save();closeSheet();render()},
+  'ca-shift':e=>{const n=shift(caDay||today(),+e.dataset.v);if(n>today())return;caDay=n;render()},
+  'new-client':()=>clientForm(),
+  'edit-client':e=>clientForm(client(e.dataset.id)),
+  'save-client':e=>{const nom=val('cl-nom');if(!nom)return toast('Écrivez le nom');const d={nom,tel:val('cl-tel'),note:val('cl-note')};let id=e.dataset.id;if(id)Object.assign(client(id),d);else{id=uid();S.clients.push({id,...d,code:newCode()})}save();render();clientSheet(id)},
+  client:e=>{if(client(e.dataset.id))clientSheet(e.dataset.id)},
+  'new-code':e=>{const c=client(e.dataset.id);c.code=newCode();save();clientSheet(c.id);toast('Nouveau code : '+c.code)},
+  'del-client':e=>{if(delArm!==e.dataset.id){delArm=e.dataset.id;e.textContent='Touchez encore pour supprimer';return}const id=e.dataset.id;S.clients=S.clients.filter(c=>c.id!==id);save();closeSheet();render();toast('Client supprimé')},
+  'p-del':e=>{pendingPhotos.splice(+e.dataset.v,1);refreshPgrid()},
+  'p-first':e=>{const k=+e.dataset.v;pendingPhotos.unshift(pendingPhotos.splice(k,1)[0]);refreshPgrid()},
+  dem:e=>demSheet(e.dataset.id),
+  'dem-reply':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const pr=num(val('dm-prix'));if(pr){d.data={...(d.data||{}),contre:pr}}d.reponse=val('dm-rep')||(pr?'Mon prix : '+fmt(pr)+'.':'');if(!d.reponse)return toast('Écrivez la réponse');d.statut='traite';demSave(d);save();closeSheet();render();toast('Réponse enregistrée')},
+  'dem-wa':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const cl=dCl(d);const pr=num(val('dm-prix'));const t=val('dm-rep');const x=d.data||{};
+    const obj=d.type==='devis'?'pour réparer votre '+[x.marque,x.modele].filter(Boolean).join(' '):d.type==='vente'?'pour votre '+[x.marque,x.modele].filter(Boolean).join(' '):d.type==='achat'?'pour le '+(x.telNom||'téléphone').split(' · ')[0]:'';
+    const msg='Bonjour '+cl.nom+', '+(pr?'je vous propose '+fmt(pr)+' '+obj+'. ':'')+(t||'');window.open(waLink(cl.tel,msg.trim()),'_blank','noopener')},
+  'dem-rep':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const x=d.data||{};repForm(null,{prix:x.prixAccepte||x.contre||'',clientId:ensureClient(d),marque:x.marque,modele:x.modele,pannes:x.pannes||[],texte:d.texte,photos:[d.photo,...(x.photos||[])].filter((p,i,a)=>p&&a.indexOf(p)===i).slice(0,5),demId:d.id})},
+  'dem-buy':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const x=d.data||{};const cl=dCl(d);telForm(null,{marque:x.marque,modele:x.modele,memoire:x.memoire,batterie:x.batterie,etat:x.etat,prixAchat:x.prixAccepte||x.contre||x.prixVoulu,photos:[d.photo,...(x.photos||[])].filter((p,i,a)=>p&&a.indexOf(p)===i).slice(0,5),fournisseur:{nom:cl.nom,tel:cl.tel,cni:''},demId:d.id})},
+  'dem-reserve':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const t=tel_(d.data.telId);if(t)t.statut='reserve';ensureClient(d);d.statut='traite';d.reponse=d.reponse||`Le ${telNom(t)} est réservé pour vous. Passez au magasin.`;demSave(d);save();closeSheet();render();toast('Réservé')},
+  'dem-sell':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const cid=ensureClient(d);d.statut='traite';demSave(d);save();openSale(d.data.telId,cid,d.data.prixAccepte||d.data.contre||d.data.offre)},
+  'c-devis':()=>cDevis(),'c-vendre':()=>cVendre(),'c-question':()=>cQuestion(),'c-suivi':()=>cSuivi(),
+  'c-tel':e=>cTelSheet(e.dataset.id),
+  'cd-send':async e=>{const mod=val('cd-modele');if(!mod)return toast('Écrivez le modèle');if(!pickPannes.length&&!val('cd-t'))return toast('Dites-nous la panne');
+    clientSend({id:uid(),type:'devis',texte:val('cd-t'),photo:pendingPhotos[0]||null,data:{marque:val('cd-marque'),modele:mod,pannes:[...pickPannes],photosLocal:pendingPhotos.slice(1)},date:today(),statut:'nouveau',reponse:''},e)},
+  'cv-send':async e=>{const mod=val('cv-modele');if(!mod)return toast('Écrivez le modèle');if(!pendingPhotos.length)return toast('Ajoutez au moins une photo');
+    clientSend({id:uid(),type:'vente',texte:val('cv-t'),photo:pendingPhotos[0],data:{marque:val('cv-marque'),modele:mod,memoire:val('cv-mem'),batterie:num(val('cv-bat'))||'',etat:val('cv-etat'),prixVoulu:num(val('cv-prix')),photosLocal:pendingPhotos.slice(1)},date:today(),statut:'nouveau',reponse:''},e)},
+  'ca-send':e=>{const t=tel_(e.dataset.id);clientSend({id:uid(),type:'achat',texte:val('ca-t'),photo:t.photo&&/^https?:/.test(t.photo)?t.photo:null,data:{telId:t.id,telNom:telNom(t)+' '+t.memoire+' · '+fmt(t.prix),offre:num(val('ca-offre'))||undefined},date:today(),statut:'nouveau',reponse:''},e)},
+  'cq-send':e=>{const t=val('cm-t');if(!t)return toast('Écrivez votre question');clientSend({id:uid(),type:'question',texte:t,date:today(),statut:'nouveau',reponse:''},e)},
+  'su-go':e=>suiviGo(e),
+  'c-accept':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const x=d.data||{};const nx={...x,accepte:true,prixAccepte:x.contre,ref:d.id};delete nx.photos;delete nx.contre;delete nx.offre;
+    clientSend({id:uid(),type:d.type,texte:'',photo:null,data:nx,date:today(),statut:'nouveau',reponse:''},e)},
+  'c-counter':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);sheet('Proposer un autre prix',`<div class="panel"><div class="small">Le magasin propose <b>${fmt(d.data.contre)}</b>.</div><div class="f"><label for="cc-p">Votre prix (F)</label><input id="cc-p" inputmode="numeric"></div><div class="f"><label for="cc-t">Message (facultatif)</label><input id="cc-t"></div></div><button class="btn gold block" data-act="cc-send" data-id="${d.id}">Envoyer mon prix</button>`)},
+  'cc-send':e=>{const d=S.demandes.find(x=>x.id===e.dataset.id);const pr=num(val('cc-p'));if(!pr)return toast('Écrivez votre prix');const x=d.data||{};const nx={...x,offre:pr,ref:d.id};delete nx.photos;delete nx.contre;if(d.type==='vente')nx.prixVoulu=pr;
+    clientSend({id:uid(),type:d.type,texte:val('cc-t'),photo:null,data:nx,date:today(),statut:'nouveau',reponse:''},e)},
+};
+function suiviHtml(r){const i=RSTEPS.indexOf(r.statut);const rst=Math.max(0,num(r.prix)-num(r.paye));
+  return `<div class="panel"><div class="sec-h"><div><div class="row-t"><span class="ticket">N° ${no4(r.no)}</span> · ${esc(r.tel||'')}</div><div class="row-s">${esc((r.pannes||[]).join(', '))}</div></div><span class="pill st-${r.statut}">${RS[r.statut]||r.statut}</span></div>
+  ${r.statut==='annule'?'':`<div class="suivi">${RSTEPS.map((s,k)=>`<div class="${k<i?'done':k===i?'now':''}"><i></i>${RS[s]}</div>`).join('')}</div>`}
+  ${r.statut==='pret'?'<div class="reply" style="background:var(--ok-soft);color:var(--ok)"><b>Votre téléphone est prêt !</b> Vous pouvez passer le récupérer.</div>':r.datePrevue&&r.statut!=='livre'?`<div class="small">Prêt prévu : <b>${dayLabel(r.datePrevue).toLowerCase()}</b></div>`:''}
+  ${num(r.prix)?`<div class="money"><div><b>${fmt(r.prix)}</b><span>Prix</span></div><div><b>${fmt(r.paye)}</b><span>Payé</span></div><div><b style="color:${rst?'var(--bad)':'var(--ok)'}">${fmt(rst)}</b><span>Reste</span></div></div>`:'<div class="small muted">Le prix sera confirmé après le diagnostic.</div>'}
+  ${r.garantieFin?`<div class="small">${daysTo(r.garantieFin)>=0?'🛡️ Sous garantie jusqu’au '+dateFr(r.garantieFin,{day:'numeric',month:'long'}):'Garantie terminée'}</div>`:''}</div>`}
+async function suiviGo(e){const no=parseInt(val('su-no'),10),tel=val('su-tel');if(!no)return toast('Écrivez le N° du reçu');if(tel.replace(/\D/g,'').length<9)return toast('Écrivez votre numéro');
+  let r=null;
+  if(PORTAL){e.disabled=true;e.textContent=tr('Recherche…');let res;try{res=await SB.rpc('phone_suivi',{p_shop:PORTAL,p_no:no,p_phone:tel})}catch(err){res={error:err}}e.disabled=false;e.textContent=tr('Voir où en est mon téléphone');
+    if(res.error)return toast(errTxt(res.error));r=res.data}
+  else{const x=S.reparations.find(y=>+y.no===no&&String((client(y.clientId)||{}).tel||'').replace(/\D/g,'').slice(-9)===tel.replace(/\D/g,'').slice(-9));if(x)r={no:x.no,tel:repTel(x),pannes:x.pannes,statut:x.statut,prix:x.prix,paye:sumP(x.paiements),datePrevue:x.datePrevue,garantieFin:garantieFin(x)}}
+  const box=$('#su-res');if(!r){box.innerHTML='<div class="empty">Aucune réparation avec ce numéro de reçu et ce téléphone. Vérifiez le reçu.</div>';return}
+  try{const g=guest();localStorage.setItem('terangaPhone.guest',JSON.stringify({...g,tel}))}catch(_){}
+  box.innerHTML=suiviHtml(r)}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  if(t.dataset.act==='close-bg'){if(e.target===t)closeSheet();return}
+  if(ONLINE&&!PORTAL&&blockedAct(t.dataset.act))return;
+  const f=A[t.dataset.act];if(f){if(t.tagName!=='A')e.preventDefault();f(t)}
+});
+document.addEventListener('input',e=>{
+  const k=e.target.dataset.input;
+  if(k==='q'){q=e.target.value;const pos=e.target.selectionStart;render();const n=$('#q');if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}}
+  if(e.target.dataset.sale==='lp'){readSale();const t=$('#sv-tot');if(t)t.textContent=fmt(enc.lignes.reduce((a,l)=>a+num(l.prix),0))}
+});
+document.addEventListener('change',e=>{
+  if(e.target.dataset.input==='viewAs'){viewAs=e.target.value;render()}
+  if(e.target.dataset.newc){const b=document.getElementById(e.target.dataset.newc+'-new');if(b)b.hidden=e.target.value!=='__new';if(enc&&e.target.id==='sv-c')enc.clientId=e.target.value}
+  if(e.target.dataset.sale==='tel'){readSale();const t=tel_(e.target.value);if(t){enc.telId=t.id;enc.lignes=[{nom:telNom(t)+' '+t.memoire,prix:num(t.prix)},...enc.lignes.filter(l=>l.nom||num(l.prix))];saleSheet()}}
+  if(e.target.dataset.rep){const r=rep_(e.target.dataset.rep);const p=piece(e.target.value);if(r&&p){r.pieces.push({pieceId:p.id,nom:p.nom,cout:num(p.cout)});p.qte=Math.max(0,num(p.qte)-1);if(!num(r.prix)&&num(p.prix))r.prix=num(p.prix);save();repSheet(r.id);toast(p.nom+' · stock '+num(p.qte))}}
+  if(e.target.dataset.photos){const files=[...e.target.files].slice(0,MAXP-pendingPhotos.length);if(e.target.files.length>files.length)toast('Maximum '+MAXP+' photos');files.forEach(f=>readPhoto(f,u=>{if(pendingPhotos.length<MAXP){pendingPhotos.push(u);refreshPgrid()}}))}
+});
+document.addEventListener('scroll',e=>{const t=e.target;if(!t||t.id!=='galT')return;const k=Math.round(t.scrollLeft/t.clientWidth);const n=t.children.length;
+  const N=$('#galN');if(N)N.textContent=(k+1)+' / '+n;const D=$('#galD');if(D)[...D.children].forEach((d,i)=>d.className=i===k?'on':'')},true);
+/* ================= Langue : français + Wolof ================= */
+let LANG=(()=>{try{return localStorage.getItem('terangaPhone.lang')==='wo'?'wo':'fr'}catch(e){return 'fr'}})();
+const WO={
+"Prix à discuter":"Njëg bi dañu koy waxtaan","Prix minimum (secret, pour discuter)":"Njëg bu gën a suufe (sutura, ngir waxaale)","Votre offre (F) · facultatif, le prix se discute":"Sa njëg (F) · njëg bi dañu koy waxaale","Votre prix pour la réparation (F)":"Sa njëg ngir defar bi (F)","Votre offre pour son téléphone (F)":"Li ngay jox ci telefonam (F)","Votre prix pour lui (F)":"Sa njëg ngir moom (F)",
+"J’accepte":"Nangu naa","Autre prix":"Beneen njëg","Proposer un autre prix":"Wone beneen njëg","Votre prix (F)":"Sa njëg (F)","Envoyer mon prix":"Yónnee sama njëg","Écrivez votre prix":"Bindal sa njëg","Vous avez répondu à ce prix.":"Tontu nga ci njëg bii.",
+"Le magasin vous envoie le prix dans vos messages.":"Magasin bi dina la yónnee njëg bi ci say bataaxal.","Le magasin vous envoie le prix sur WhatsApp.":"Magasin bi dina la yónnee njëg bi ci WhatsApp.",
+"Accueil":"Kër","Réparations":"Defar yi","Vente":"Jaay","Clients":"Kiliyaan yi","Caisse":"Kees","Envoyer":"Yónnee","Téléphones":"Telefon yi","Mon espace":"Sama bérab","Messages":"Bataaxal yi","Réglages":"Réglages",
+"Réparations en cours":"Defar yu ñuy def","Prêts à rendre":"Pare na ñu delloo","Encaissé aujourd’hui":"Xaalis bu dugg tey","Téléphones en vente":"Telefon yu ñuy jaay","Réservés":"Ñu ko denc",
+"+ Réparation":"+ Defar","+ Vendre":"+ Jaay","À traiter":"Lu war a def","Tout voir":"Xool lépp","En retard":"Yàgg na","Aujourd’hui":"Tey","Demain":"Suba","Hier":"Démb",
+"Reçu":"Jot nañu ko","Diagnostic":"Seet","Attente pièce":"Ñu ngi xaar pièce","En réparation":"Ñu ngi koy defar","Prêt":"Pare na","Rendu":"Delloo nañu ko","Annulé":"Neenal nañu ko",
+"Disponible":"Am na","Réservé":"Ñu ko denc","Vendu":"Jaay nañu ko","Nouveau":"Bees","Traité":"Def nañu ko","Payé":"Fey nañu","Prix":"Njëg","Reste":"Des","Prix à voir":"Njëg bi ñu ngi koy xool",
+"En cours":"Ñu ngi koy def","Prêts":"Pare nañu","Rendus":"Delloo nañu","Tous":"Lépp","Aucune réparation ici.":"Amul defar fii.","Nom, N° de reçu, IMEI…":"Tur, nimero reçu, IMEI…",
+"Pièces":"Pièces yi","Ventes":"Jaay yi","+ Ajouter":"+ Yokk","+ Nouvelle":"+ Bu bees","+ Nouveau":"+ Bu bees","Ajoutez vos écrans, batteries, connecteurs…":"Yokkal say écran, batterie, connecteur…","Aucune vente.":"Amul jaay.",
+"Vos clients voient les téléphones disponibles sur votre page et peuvent les réserver.":"Sa kiliyaan yi dinañu gis telefon yi am ci sa page te mën nañu ko denc.","Ajoutez les téléphones que vous vendez, avec photos et prix.":"Yokkal telefon yi ngay jaay, ak nataal ak njëg.",
+"Nom ou téléphone…":"Tur walla telefon…","Aucun client.":"Amul kiliyaan.","Total encaissé":"Xaalis bi dugg","Rien encaissé ce jour.":"Duggul dara bés boobu.","Ce mois":"Weer wii","Encaissé":"Dugg na","Ventes":"Jaay yi",
+"Gagné sur les réparations rendues (prix − pièces)":"Njariñ ci defar yi (njëg − pièces)","Gagné sur les ventes (prix − achat)":"Njariñ ci jaay yi (njëg − jënd)","Espèces":"Cash","Payé par":"Fey ak",
+"Demandes des clients":"Laaj yu kiliyaan yi","Devis, téléphones à vendre ou à acheter, questions : tout ce qui arrive de votre page.":"Devis, telefon yu ñuy jaay walla jënd, laaj : li ñëw ci sa page lépp.","Rien pour le moment.":"Amul dara léegi.",
+"Devis réparation":"Devis defar","Veut vendre son téléphone":"Bëgg na jaay telefonam","Veut acheter":"Bëgg na jënd","Question":"Laaj",
+"Que voulez-vous faire ?":"Lan nga bëgg def ?","Sans compte, sans code":"Soxlaoo kont, soxlaoo code","Écrivez votre nom et votre numéro, envoyez, c’est fait. Le magasin vous répond sur WhatsApp.":"Bindal sa tur ak sa nimero, yónnee, jeex na. Magasin bi dina la tontu ci WhatsApp.","Le magasin reçoit tout tout de suite.":"Magasin bi dina jot lépp léegi.",
+"Envoyez la panne et une photo":"Yónneel jafe-jafe bi ak nataal","Suivre ma réparation":"Topp sama defar","Avec le N° du reçu":"Ak nimero reçu bi","Acheter un téléphone":"Jënd telefon","Voir les téléphones en vente":"Xool telefon yu ñuy jaay","Vendre mon téléphone":"Jaay sama telefon","Photos, état, votre prix":"Nataal, ni mu mel, sa njëg","Poser une question":"Laaj","Prix, pièces, garantie…":"Njëg, pièces, garantie…",
+"Écrire au magasin sur WhatsApp":"Bind magasin bi ci WhatsApp","Vous avez un code du magasin ? Allez dans « Mon espace » pour voir toutes vos réparations et vos achats.":"Am nga code bu magasin bi ? Demal ci « Sama bérab ».",
+"Pas de téléphone en vente pour le moment.":"Amul telefon buñuy jaay léegi.","Mes réparations":"Samay defar","Mes achats":"Samay jënd","Pas de réparation.":"Amul defar.","Devis, vendre, acheter, question":"Devis, jaay, jënd, laaj",
+"Votre téléphone est prêt !":"Sa telefon pare na !","Vous pouvez passer le récupérer.":"Mën nga ñëw jël ko.","Le prix sera confirmé après le diagnostic.":"Dinañu dëggal njëg bi su ñu seetee.",
+"Une question ?":"Am nga laaj ?","Mes messages":"Samay bataaxal","+ Question":"+ Laaj","En attente":"Ñu ngi xaar","Répondu":"Tontu nañu","Aucun message.":"Amul bataaxal.",
+"Nouvelle réparation":"Defar bu bees","Modifier la réparation":"Soppi defar bi","Client":"Kiliyaan","— Choisir —":"— Tànnal —","+ Nouveau client":"+ Kiliyaan bu bees","Nom":"Tur","Téléphone":"Telefon","Marque":"Marque","Modèle":"Modèle","Couleur":"Kulëër",
+"Panne":"Jafe-jafe bi","Détails":"Leeral","Code de déverrouillage (gardé secret)":"Code bu ubbi (dañu koy denc)","Prêt le":"Pare ci","Prix (F)":"Njëg (F)","après diagnostic":"su ñu seetee","Avance reçue":"Avance","Technicien":"Technicien","Enregistrer et faire le reçu":"Denc te def reçu bi","Enregistrer":"Denc",
+"Écran cassé":"Écran bi toj na","Batterie":"Batterie","Ne charge pas":"Du charger","Ne s’allume pas":"Du taal","Tombé dans l’eau":"Daanu na ci ndox","Pas de réseau":"Amul réseau","Haut-parleur / micro":"Haut-parleur / micro","Caméra":"Caméra","Bloqué / logiciel":"Dafa tëj / logiciel","Autre":"Leneen",
+"Étape (touchez)":"Fan la tollu (bësal)","Ajouter le paiement":"Yokk pey bi","Paiement":"Pey","Par":"Ak","Pièces utilisées":"Pièces yi ñu jëfandikoo","Ajouter une pièce du stock":"Yokk pièce bu nekk ci stock",
+"Dire au client que c’est prêt":"Wax kiliyaan bi ne pare na","Envoyer le reçu":"Yónnee reçu bi","Rendu au client":"Delloo nañu ko kiliyaan bi","Modifier":"Soppi","Fiche client":"Kayitu kiliyaan","Annuler la réparation":"Neenal defar bi","Supprimer":"Far",
+"Nouveau téléphone à vendre":"Telefon bu bees buñuy jaay","Modifier le téléphone":"Soppi telefon bi","Mémoire":"Mémoire","Batterie (%)":"Batterie (%)","État":"Ni mu mel","Prix d’achat (F)":"Njëg bu jënd (F)","Prix de vente (F)":"Njëg bu jaay (F)","Garantie":"Garantie","Note pour les clients":"Note ngir kiliyaan yi","Afficher « Nouveau »":"Wone « Bees »",
+"Acheté à (privé, les clients ne le voient pas)":"Ku ñu ko jënde (kiliyaan yi duñu ko gis)","Nom du vendeur":"Turu ki ko jaay","N° de carte d’identité du vendeur":"Nimero kartu identité ki ko jaay",
+"Notez toujours l’IMEI et la carte d’identité de celui qui vous vend un téléphone : ça vous protège si le téléphone était volé.":"Bindal saa su nekk IMEI bi ak kartu identité ki lay jaay telefon : loolu mooy aar ci telefon bu ñu sàcc.","Retirer ce téléphone":"Far telefon bii",
+"Vendre ce téléphone":"Jaay telefon bii","Réserver":"Denc","Remettre disponible":"Delloo ko ci « Am na »","Neuf":"Bees","Comme neuf":"Mel ni bu bees","Très bon":"Baax na lool","Bon":"Baax na","Avec défauts":"Am na ay sikk",
+"Nouvelle pièce":"Pièce bu bees","Modifier la pièce":"Soppi pièce bi","Pièce":"Pièce","Pour quels modèles":"Ngir ban modèle","Quantité":"Lim","Prix pour le client, pose comprise (F)":"Njëg ngir kiliyaan bi, ak pose bi (F)","Retirer cette pièce":"Far pièce bii",
+"Vendre":"Jaay","Client de passage":"Kiliyaan bu jaar","Téléphone du stock (facultatif)":"Telefon bu nekk ci stock (bu la neexee)","— Aucun —":"— Dara —","Articles":"Marsandiis yi","+ Accessoire (chargeur, coque…)":"+ Accessoire (chargeur, coque…)","Payé maintenant (F)":"Li mu fey léegi (F)","tout":"lépp","Total":"Total",
+"Si le client paie en plusieurs fois, écrivez seulement ce qu’il paie maintenant : le reste est noté comme crédit.":"Su kiliyaan bi di fey ndànk-ndànk, bindal li mu fey léegi rekk : li des dinañu ko bind ni bor.","Enregistrer la vente":"Denc jaay bi","Supprimer cette vente":"Far jaay bii",
+"Nouveau client":"Kiliyaan bu bees","Modifier le client":"Soppi kiliyaan bi","Nom et prénom":"Tur ak santa","Téléphone (WhatsApp)":"Telefon (WhatsApp)","Note":"Note","Espace client":"Bérabu kiliyaan","Envoyer l’accès":"Yónnee ko dugg bi","Nouveau code":"Code bu bees","Achats":"Jënd yi","Supprimer le client":"Far kiliyaan bi",
+"Le client apporte le téléphone : créer la réparation":"Kiliyaan bi indi na telefon bi : def defar bi","Je l’achète : ajouter au stock":"Dinaa ko jënd : yokk ko ci stock","Le réserver pour ce client":"Denc ko ngir kiliyaan bii","Ce téléphone n’est plus dans le stock.":"Telefon bii nekkatul ci stock bi.","Répondre":"Tontu",
+"Réglages du magasin":"Réglagesu magasin bi","Nom du magasin":"Turu magasin bi","Téléphone WhatsApp":"Telefon WhatsApp","Ville":"Dëkk","Adresse / marché":"Adresse / marché","Je fais":"Li ma def","Réparation et vente":"Defar ak jaay","Réparation seulement":"Defar rekk","Vente seulement":"Jaay rekk","Garantie réparation (jours)":"Garantie defar (fan)",
+"Techniciens / vendeurs":"Technicien / jaaykat yi","Nouvelle personne":"Nit ku bees","Ajouter":"Yokk","Retirer":"Far","Vous travaillez seul ? Pas besoin d’en ajouter.":"Yaw rekk ngay liggéey ? Soxlaoo yokk.",
+"Devis de réparation":"Devis defar","Qu’est-ce qui ne va pas ?":"Lan moo baaxul ?","Photo du téléphone (facultatif)":"Nataalu telefon bi (bu la neexee)","Demander le prix":"Laaj njëg bi","Votre nom":"Sa tur","Votre numéro WhatsApp":"Sa nimero WhatsApp",
+"Photos du téléphone (devant, derrière, écran allumé)":"Nataalu telefon bi (kanam, ginnaaw, écran bu taal)","Votre prix (F)":"Sa njëg (F)","Proposer au magasin":"Wone ko magasin bi","Le magasin regarde et vous fait une offre. Apportez votre carte d’identité le jour de la vente.":"Magasin bi dina ko xool te wax la njëg. Indil sa kartu identité bés bu ngay jaay.",
+"Message (facultatif)":"Bataaxal (bu la neexee)","Je le veux":"Bëgg naa ko","Déjà réservé : vous pouvez demander s’il se libère.":"Denc nañu ko ba noppi : mën nga laaj bu ñu ko bàyyee.","Votre question":"Sa laaj",
+"N° du reçu":"Nimero reçu bi","Votre numéro":"Sa nimero","Voir où en est mon téléphone":"Xool fan la sama telefon tollu","Recherche…":"Mangi wut…","Aucune réparation avec ce numéro de reçu et ce téléphone. Vérifiez le reçu.":"Amul defar ak nimero reçu bii ak telefon bii. Seetal reçu bi.",
+"Demande envoyée":"Yónnee nañu laaj bi","Proposition envoyée":"Yónnee nañu ko","Question envoyée":"Yónnee nañu laaj bi","Écrire aussi sur WhatsApp":"Bind it ci WhatsApp","Fermer":"Tëj","Envoyé au magasin":"Yónnee nañu ko magasin bi",
+"Écrivez votre nom":"Bindal sa tur","Écrivez votre numéro WhatsApp":"Bindal sa nimero WhatsApp","Écrivez le modèle":"Bindal modèle bi","Dites-nous la panne":"Wax nu jafe-jafe bi","Ajoutez au moins une photo":"Yokkal benn nataal lu néew","Écrivez votre question":"Bindal sa laaj","La photo n’est pas partie : vérifiez internet":"Nataal bi demul : seetal internet",
+"Pas de code ?":"Amoo code ?","Sans code : envoyer au magasin":"Amoo code : yónnee magasin bi","Pas besoin de code pour demander un devis, suivre une réparation avec le N° du reçu, acheter ou vendre un téléphone.":"Soxlaoo code ngir laaj devis, topp defar ak nimero reçu, jënd walla jaay telefon.",
+"Entrez votre numéro et le code que le magasin vous a donné. Vous verrez toutes vos réparations, vos achats et vos messages.":"Bindal sa nimero ak code bi magasin bi la jox.",
+"Créer mon magasin":"Sos sama magasin","Écrivez le nom de votre magasin":"Bindal turu sa magasin","Lien de votre magasin":"Lienu sa magasin","Ce magasin est introuvable. Vérifiez le lien.":"Gisuñu magasin bii. Seetal lien bi.","Page fermée pour le moment":"Page bi tëju na léegi","Écrivez directement au magasin.":"Bindal magasin bi.","WhatsApp du magasin":"WhatsApp magasin bi",
+"Gardez le magasin sur votre téléphone":"Denc magasin bi ci sa telefon","Commencer à vide":"Tàmbali ci dara","Magasin":"Magasin","Client":"Kiliyaan",
+"Mon espace client":"Sama bérab kiliyaan","Entrer":"Dugg","Code":"Code","4 chiffres":"4 siifar","Pas encore de code ?":"Amagoo code ?","Se déconnecter":"Génn","Numéro ou code incorrect":"Nimero bi walla code bi baaxul","Bienvenue":"Dalal ak jàmm",
+"Écrivez votre numéro et votre code":"Bindal sa nimero ak sa code","Écrivez votre nom":"Bindal sa tur","Écrivez votre numéro WhatsApp":"Bindal sa nimero WhatsApp","Écrivez votre question":"Bindal sa laaj",
+"Lien de votre salon":"Lienu sa magasin","Copier le lien":"Copie lien bi","Partager":"Séddoo","Lien copié":"Copie nañu lien bi","Abonnement":"Abonnement","Voir":"Xool","Compte":"Kont",
+"Abonnement expiré":"Abonnement bi jeex na","Essai gratuit":"Jéem (amul pey)","Abonné":"Abonné","par mois":"ci weer","J’ai payé : vérifier mon abonnement":"Fey naa : seet sama abonnement","Abonnement à jour":"Sa abonnement baax na","Pas encore de paiement reçu":"Jotaguñu pey bi","Vérification…":"Mangi seet…",
+"Abonnement terminé : vous pouvez regarder, pas modifier":"Abonnement bi jeex na : mën ngaa xool, waaye doo mën a soppi",
+"Se connecter":"Dugg","Créer un compte":"Sos kont","Créer mon salon":"Sos sama salon","Numéro de téléphone":"Nimero telefon","Mot de passe":"Baatu jàll","Répéter le mot de passe":"Bindaat baatu jàll bi","6 caractères minimum":"6 araf lu néew",
+"Notez bien votre mot de passe : il faudra le même sur un nouveau téléphone.":"Bindal bu baax sa baatu jàll : dinga ko soxla ci telefon bu bees.","7 jours gratuits.":"7 fan yu amul pey.",
+"Numéro ou mot de passe faux":"Nimero bi walla baatu jàll bi baaxul","Ce numéro a déjà un compte : appuyez sur « Se connecter »":"Nimero bii am na kont ba noppi : bësal « Dugg »","Les deux mots de passe ne sont pas pareils":"Ñaari baatu jàll yi yemuñu",
+"Le mot de passe doit avoir au moins 6 caractères":"Baatu jàll bi war na am 6 araf lu néew","Numéro de téléphone invalide":"Nimero bi baaxul","Pas de connexion internet : réessayez":"Amul internet : jéemaatal","Connexion…":"Mangi dugg…","Chargement…":"Mangi yebbi…","Envoi…":"Mangi yónnee…","Réessayer":"Jéemaatal",
+"Sauvegardé en ligne":"Denc nañu ko ci internet","Envoi en cours…":"Mangi yónnee…","Pas encore envoyé : vérifiez internet":"Yónneegul : seetal internet","Changer le mot de passe":"Soppi baatu jàll","Nouveau mot de passe":"Baatu jàll bu bees","Mot de passe changé":"Soppi nañu baatu jàll bi","Touchez encore pour sortir":"Bësaatal ngir génn",
+"Écrivez le nom de votre salon":"Bindal turu sa magasin","Bienvenue ! 7 jours gratuits":"Dalal ak jàmm ! 7 fan yu amul pey","Ce salon est introuvable. Vérifiez le lien.":"Gisuñu magasin bii. Seetal lien bi.",
+"Ce sont des exemples pour découvrir l'app.":"Misaal yu ngir xam app bi.","Commencer à vide":"Tàmbali ci dara","Mettez l’app sur l’écran d’accueil":"Def app bi ci écran d'accueil bi","Gardez le salon sur votre téléphone":"Denc magasin bi ci sa telefon","C’est fait":"Def naa ko"
+};const WO_RX=[
+[/^Bonjour,? (.+)$/,"Nanga def $1"],[/^Bonsoir, (.+)$/,"Nanga def $1"],[/^Connecté : (.+)$/,"Dugg nga : $1"],[/^Reçu le (.+)$/,"Jot nañu ko ci $1"],[/^Nouveau code : (.+)$/,"Code bu bees : $1"],[/^Jusqu’au (.+)$/,"Ba $1"],[/^Maximum (\d+) photos$/,"$1 nataal rekk"],
+[/^Photos \(jusqu’à (\d+)\) · la 1re est la couverture$/,"Nataal yi (ba $1) · bu jëkk bi mooy ci kaw"],[/^Merci (.+) !$/,"Jërëjëf $1 !"],[/^(\d+) photos$/,"$1 nataal"],[/^(\d+) en stock$/,"$1 ci stock"],
+[/^(\d+) réparations? · (\d+) achats?$/,"$1 defar · $2 jënd"],[/^Prévu (.+)$/,"Dinañu ko jeexal $1"],[/^Rendu (.+)$/,"Delloo nañu ko $1"],[/^En retard · prévu (.+)$/,"Yàgg na · waroon na $1"],[/^reste (.+)$/,"des $1"],[/^Reçu N° (\d+)$/,"Reçu N° $1"],
+[/^Prêt ! Prévenez le client sur WhatsApp$/,"Pare na ! Wax kiliyaan bi ci WhatsApp"],[/^Sous garantie jusqu’au (.+)$/,"Garantie ba $1"],[/^Réparation N° (\d+)$/,"Defar N° $1"],[/^Le magasin propose (.+)$/,"Magasin bi dafa wax $1"],[/^Votre minimum : (.+)$/,"Sa njëg bu gën a suufe : $1"]
+];function trWo(s){if(Object.prototype.hasOwnProperty.call(WO,s))return WO[s];for(const [r,v] of WO_RX)if(r.test(s))return s.replace(r,v);return s}
+const tr=s=>LANG==='wo'?trWo(s):s;
+const SKIP='script,style,textarea,.aname,.eyebrow,.row-t,.card-t,.code,.linkbox,[data-notr]';
+function trNode(n){if(LANG!=='wo'||!n)return;
+  if(n.nodeType===3){const p=n.parentElement;if(!p||p.closest(SKIP))return;const v=n.nodeValue,t=v.trim();if(!t||!/[A-Za-zÀ-ÿ]/.test(t))return;const r=trWo(t);if(r!==t)n.nodeValue=v.replace(t,r);return}
+  if(n.nodeType!==1||n.closest(SKIP))return;
+  const ph=el=>{const t=(el.getAttribute('placeholder')||'').trim();if(t){const r=trWo(t);if(r!==t)el.setAttribute('placeholder',r)}};
+  if(n.hasAttribute('placeholder'))ph(n);
+  const tw=document.createTreeWalker(n,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT);let c;
+  while((c=tw.nextNode())){if(c.nodeType===3)trNode(c);else if(c.hasAttribute('placeholder')&&!c.closest(SKIP))ph(c)}}
+new MutationObserver(ms=>{if(LANG!=='wo')return;for(const m of ms){if(m.type==='characterData'||m.type==='attributes')trNode(m.target);else m.addedNodes.forEach(trNode)}})
+  .observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['placeholder']});
+function applyLang(){document.documentElement.lang=LANG==='wo'?'wo':'fr';if(LANG==='wo')trNode(document.body)}
+A.lang=()=>{LANG=LANG==='wo'?'fr':'wo';try{localStorage.setItem('terangaPhone.lang',LANG)}catch(e){}closeSheet();render();applyLang();toast(LANG==='wo'?'Wolof':'Français')};
+
+/* ================= EN LIGNE (Supabase seck.apps.sn) ================= */
+const ONLINE=!!window.TP_ONLINE;
+const SUPA_URL='https://ncsjgmkrsvtwklfrdbgy.supabase.co',SUPA_KEY='sb_publishable_oDE4BbU6J3RTnce1Oo91cQ_hokWgh0U';
+const MAIL_DOM='@terangaphone.app',SITE='https://seckappssn-maker.github.io/teranga-phone/';
+const GRACE_DAYS=3,ABO_PRIX=5000,SECK_WA='77 879 00 06',SECK_PAY='77 879 00 06';
+const QS=(()=>{try{return new URLSearchParams(location.search)}catch(e){return new URLSearchParams('')}})();
+const PORTAL=ONLINE?(QS.get('a')||'').trim():'';
+const TICKET=(QS.get('t')||'').replace(/\D/g,'');
+const LKEY='terangaPhone.v1',PKEY='terangaPhone.portal.'+PORTAL,DIRTY=LKEY+'.dirty';
+let SB=null,USER=null,BOOT=ONLINE,AUTHM='login',LIC=null,syncSt='ok',pushT=null,retryT=null,pushing=false,PUB=null,PCRED=null,PERR='',outArm=false;
+
+const newCode=()=>String(1000+Math.floor(Math.random()*9000));
+const A31='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+function newShopId(){const a=new Uint32Array(6);try{crypto.getRandomValues(a)}catch(e){a.forEach((_,i)=>a[i]=Math.random()*1e9)}return Array.from(a,x=>A31[x%31]).join('')}
+function phoneDigits(p){let d=String(p||'').replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===9)d='221'+d;return d}
+const userPhone=()=>USER&&USER.email?USER.email.split('@')[0].replace(/^221(\d\d)(\d{3})(\d\d)(\d\d)$/,'$1 $2 $3 $4'):'';
+const portalLink=()=>SITE+'?a='+(ONLINE&&S&&S.shopId?S.shopId:'VOTRECODE');
+function accessMsg(c){return `Bonjour ${c.nom}, voici votre espace client ${S.shop.nom} :\n${portalLink()}\n\nNuméro : ${c.tel}\nCode : ${c.code}\n\nVous y suivez vos réparations, vos achats et vos messages.`}
+const isDirty=()=>{try{return localStorage.getItem(DIRTY)==='1'}catch(e){return false}};
+const setDirty=v=>{try{v?localStorage.setItem(DIRTY,'1'):localStorage.removeItem(DIRTY)}catch(e){}};
+const errTxt=e=>{const m=String(e&&e.message||e||'');return /fetch|network|Failed|Load failed/i.test(m)?'Pas de connexion internet : réessayez':m};
+
+function newState(nom,ville,tel){return fixState({v:1,demo:false,seq:0,shopId:newShopId(),shop:{nom:nom||'Mon magasin',tel:tel||'',ville:ville||'',adresse:'',activite:'tout',garantie:30},equipe:[],clients:[],reparations:[],pieces:[],telephones:[],ventes:[],demandes:[]})}
+function fixOnline(o){o=fixState(o);if(o&&!o.shopId)o.shopId=newShopId();return o}
+const blob=()=>{const o={...S};delete o.demandes;return o};
+function writeLocal(){try{localStorage.setItem(LKEY,JSON.stringify(blob()))}catch(e){}}
+function loadLocal(){try{const r=localStorage.getItem(LKEY);if(r)return fixOnline(JSON.parse(r))}catch(e){}return null}
+function saveOnline(){if(PORTAL)return;S.savedAt=Date.now();if(USER)S.uid=USER.id;writeLocal();setDirty(true);schedulePush()}
+function setSync(st){syncSt=st;const e=document.getElementById('syncDot');if(e){e.textContent=st==='ok'?'☁ ✓':st==='err'?'☁ !':'☁ …';e.className='sync '+st}}
+function schedulePush(){if(!SB||!USER)return;clearTimeout(pushT);setSync('wait');pushT=setTimeout(push,1200)}
+async function push(){if(!SB||!USER||!S||pushing)return;if(!isDirty()){setSync('ok');return}pushing=true;const at=S.savedAt||0;
+  try{const {error}=await SB.from('phone_comptes').upsert({user_id:USER.id,phone:USER.email.split('@')[0],shop_name:S.shop.nom||'',shop_id:S.shopId,saved_at:at,data:blob(),updated_at:new Date().toISOString()});
+    if(error){if(/shop_id/i.test(error.message||'')){S.shopId=newShopId();writeLocal()}throw error}
+    if((S.savedAt||0)===at)setDirty(false);setSync('ok')}
+  catch(e){setSync('err');clearTimeout(retryT);retryT=setTimeout(push,20000)}
+  finally{pushing=false;if(isDirty()&&syncSt==='ok')schedulePush()}}
+async function cloudCheck(){
+  const r=await SB.from('phone_comptes').select('saved_at').eq('user_id',USER.id).maybeSingle();if(r.error)throw r.error;
+  if(!r.data){if(S){S.uid=USER.id;setDirty(true);await push()}return 'empty'}
+  const cAt=Number(r.data.saved_at)||0,lAt=(S&&S.savedAt)||0;
+  if(!S||S.uid!==USER.id||cAt>lAt){const d=await SB.from('phone_comptes').select('data').eq('user_id',USER.id).single();if(d.error)throw d.error;
+    const dem=S&&S.uid===USER.id?S.demandes:[];S=fixOnline(d.data.data);S.uid=USER.id;S.demandes=dem||[];writeLocal();setDirty(false);setSync('ok');return 'down'}
+  if(lAt>cAt){setDirty(true);await push();return 'up'}
+  setDirty(false);setSync('ok');return 'same'}
+const rowDem=r=>({id:r.id,clientId:r.client_id||null,type:r.type,texte:r.texte||'',photo:r.photo||null,data:r.data||{},date:String(r.created_at||'').slice(0,10)||today(),statut:r.statut||'nouveau',reponse:r.reponse||'',nomV:r.client_nom||'',telV:r.client_phone||''});
+async function loadDem(){if(!SB||!USER||!S)return false;const r=await SB.from('phone_demandes').select('*').eq('owner_id',USER.id).order('created_at',{ascending:false}).limit(300);if(r.error)return false;
+  const before=JSON.stringify(S.demandes.map(d=>d.id+d.statut));S.demandes=(r.data||[]).map(rowDem);return before!==JSON.stringify(S.demandes.map(d=>d.id+d.statut))}
+function demSave(d){if(!ONLINE||PORTAL||!SB||!USER)return;SB.from('phone_demandes').update({statut:d.statut,reponse:d.reponse||'',data:d.data||{}}).eq('id',d.id).then(r=>{if(r.error)toast('Réponse pas envoyée : vérifiez internet')})}
+async function fetchLic(){if(!SB||!USER)return;const r=await SB.rpc('phone_inscription');if(!r.error&&r.data&&r.data[0]){LIC=r.data[0];try{localStorage.setItem(LKEY+'.lic',JSON.stringify(LIC))}catch(e){}}}
+function licState(){const L=LIC||{};const end=[L.trial_end,L.paid_until].filter(Boolean).sort().pop()||today();const left=daysTo(end);const trial=!L.paid_until||L.trial_end>=L.paid_until;
+  if(left>=0)return{st:left<=5?'warn':'ok',left,end,trial};if(-left<=GRACE_DAYS)return{st:'grace',left,end,trial};return{st:'blocked',left,end,trial}}
+const WRITE=new Set(['new-rep','new-rep-for','edit-rep','save-rep','rep-st','rep-pay','rep-unpiece','del-rep','new-tel','edit-tel','save-tel','del-tel','tel-st','sell-tel','new-sale','new-sale-for','sv-save','vente-pay','del-vente','new-piece','save-piece','del-piece','new-client','edit-client','save-client','new-code','del-client','dem-reply','dem-rep','dem-buy','dem-reserve','dem-sell','save-settings','add-emp','del-emp']);
+function blockedAct(a){if(!LIC||!WRITE.has(a)||licState().st!=='blocked')return false;toast(tr('Abonnement terminé : vous pouvez regarder, pas modifier'));aboSheet();return true}
+
+/* ---------- photos ---------- */
+function dataToBlob(u){const [h,b]=u.split(',');const bin=atob(b);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:(h.match(/data:([^;]+)/)||[])[1]||'image/jpeg'})}
+async function upPhoto(u,folder){if(!ONLINE||!SB||!u||!/^data:image\/(jpeg|png|webp)/.test(u))return u;
+  const path=folder+'/'+Date.now().toString(36)+uid()+'.jpg';
+  try{const r=await SB.storage.from('phone').upload(path,dataToBlob(u),{contentType:'image/jpeg',upsert:false});if(r.error)throw r.error;return SB.storage.from('phone').getPublicUrl(path).data.publicUrl}
+  catch(e){return PORTAL?null:u}}
+
+/* ---------- en-tête ---------- */
+function langBtn(){return `<button class="hbtn" data-act="lang" aria-label="Langue">${LANG==='wo'?'FR':'WO'}</button>`}
+function renderHdr(){const h=document.getElementById('hdrR');if(!h)return;
+  if(!ONLINE){h.innerHTML=`<div style="display:flex;gap:6px;align-items:center">${langBtn()}<div class="mode" role="tablist" aria-label="Mode"><button class="${mode==='shop'?'on':''}" data-act="mode" data-v="shop">Magasin</button><button class="${mode==='client'?'on':''}" data-act="mode" data-v="client">Client</button></div></div>`;return}
+  if(PORTAL||!USER||!S){h.innerHTML=langBtn();return}
+  const L=licState();let lab,cls;
+  if(!LIC){lab='☁';cls=''}else if(L.st==='blocked'){lab='Abonnement expiré';cls='bad'}else if(L.st==='grace'){lab='Expiré · '+(GRACE_DAYS+L.left)+' j';cls='bad'}
+  else if(L.st==='warn'){lab=(L.trial?'Essai':'Abonné')+' · '+L.left+' j';cls='warn'}else{lab=L.trial?'Essai gratuit':'Abonné';cls='ok'}
+  h.innerHTML=`<div style="display:flex;gap:6px;align-items:center"><span id="syncDot" class="sync ${syncSt}">${syncSt==='ok'?'☁ ✓':syncSt==='err'?'☁ !':'☁ …'}</span>${langBtn()}<button class="hchip ${cls}" data-act="abo">${lab}</button></div>`}
+
+/* ---------- écrans sans données ---------- */
+function onlineScreen(){
+  const show=html=>{$('#main').innerHTML=html;$('#tabs').innerHTML='';renderHdr();applyLang();return true};
+  if(BOOT)return show('<div class="empty" style="padding-top:30vh">Chargement…</div>');
+  if(PERR&&!S)return show(`<div class="empty" style="padding-top:20vh">${esc(PERR)}</div>`);
+  if(PORTAL){$('#aname').textContent=S.shop.nom;if(PUB&&!PUB.actif)return show(`<div class="panel" style="margin-top:20px"><h2>Page fermée pour le moment</h2><p class="muted" style="margin:0">Écrivez directement au magasin.</p>${S.shop.tel?`<a class="btn wa" href="${waLink(S.shop.tel,'Bonjour '+S.shop.nom+', ')}" target="_blank" rel="noopener">${I.wa} WhatsApp du magasin</a>`:''}</div>`);return false}
+  if(!USER){$('#aname').textContent='Teranga Phone';return show(vLogin())}
+  if(!S)return show('<div class="empty" style="padding-top:30vh">Chargement…</div>');
+  return false}
+
+/* ---------- connexion du magasin ---------- */
+function vLogin(){const su=AUTHM==='signup';
+  return `<div class="hello" style="padding-top:6px"><h1>${su?'Créer mon magasin':'Se connecter'}</h1><p class="muted" style="margin:0">Vos réparations, votre stock, vos ventes et votre caisse sont sauvegardés en ligne, même si vous changez de téléphone.${su?' <b>7 jours gratuits.</b>':''}</p></div>
+  <div class="panel"><div class="chips"><button class="chip ${su?'':'on'}" data-act="authm" data-v="login">Se connecter</button><button class="chip ${su?'on':''}" data-act="authm" data-v="signup">Créer un compte</button></div>
+  ${su?`<div class="f"><label for="au-nom">Nom du magasin</label><input id="au-nom" placeholder="ex. Teranga Tech Sandaga"></div><div class="f"><label for="au-ville">Ville</label><input id="au-ville" placeholder="ex. Dakar"></div><div class="f"><label for="au-act">Je fais</label><select id="au-act"><option value="tout">Réparation et vente</option><option value="repar">Réparation seulement</option><option value="vente">Vente seulement</option></select></div>`:''}
+  <div class="f"><label for="au-tel">Numéro de téléphone</label><input id="au-tel" inputmode="tel" autocomplete="username" placeholder="77 000 00 00"></div>
+  <div class="f"><label for="au-pw">Mot de passe</label><input id="au-pw" type="password" autocomplete="${su?'new-password':'current-password'}" placeholder="6 caractères minimum"></div>
+  ${su?'<div class="f"><label for="au-pw2">Répéter le mot de passe</label><input id="au-pw2" type="password" autocomplete="new-password"></div><div class="note">Notez bien votre mot de passe : il faudra le même sur un nouveau téléphone.</div>':''}
+  <button class="btn block" data-act="auth" id="au-btn">${su?'Créer mon magasin':'Se connecter'}</button><div class="small bad" id="au-msg" role="status"></div></div>
+  <p class="note" style="text-align:center">Besoin d’aide ? WhatsApp Seck Apps : ${SECK_WA}</p>`}
+async function doAuth(btn){const su=AUTHM==='signup',ph=phoneDigits(val('au-tel')),pw=$('#au-pw').value;const say=t=>{const m=$('#au-msg');if(m)m.textContent=tr(t)};
+  if(ph.length<12)return say('Numéro de téléphone invalide');if(pw.length<6)return say('Le mot de passe doit avoir au moins 6 caractères');
+  if(su&&pw!==$('#au-pw2').value)return say('Les deux mots de passe ne sont pas pareils');
+  const nom=su?val('au-nom'):'',ville=su?val('au-ville'):'',act=su?val('au-act'):'';if(su&&!nom)return say('Écrivez le nom de votre magasin');
+  btn.disabled=true;btn.textContent=tr('Connexion…');say('');
+  try{const email=ph+MAIL_DOM;const r=su?await SB.auth.signUp({email,password:pw}):await SB.auth.signInWithPassword({email,password:pw});
+    if(r.error)throw r.error;if(!r.data.session){btn.disabled=false;btn.textContent=tr(su?'Créer mon magasin':'Se connecter');return say('Compte créé mais pas encore actif. Contactez Seck Apps.')}
+    USER=r.data.session.user;S=loadLocal();if(S&&S.uid!==USER.id)S=null;
+    if(su){S=newState(nom,ville,ph.slice(3).replace(/(\d\d)(\d{3})(\d\d)(\d\d)/,'$1 $2 $3 $4'));S.shop.activite=act||'tout';S.uid=USER.id;saveOnline()}
+    await afterLogin();if(su){toast(tr('Bienvenue ! 7 jours gratuits'))}}
+  catch(e){const m=String(e&&e.message||'');btn.disabled=false;btn.textContent=tr(su?'Créer mon magasin':'Se connecter');
+    say(/already|registered|exists/i.test(m)?'Ce numéro a déjà un compte : appuyez sur « Se connecter »':/invalid login|credentials/i.test(m)?'Numéro ou mot de passe faux':errTxt(e))}}
+async function afterLogin(){try{await cloudCheck()}catch(e){setSync('err')}
+  if(!S){S=newState('Mon magasin','',userPhone());S.uid=USER.id;saveOnline()}
+  try{await fetchLic()}catch(e){}try{await loadDem()}catch(e){}view='accueil';mode='shop';render()}
+async function doLogout(){if(isDirty()){await push();if(isDirty())return toast(tr('Pas encore sauvegardé en ligne : connectez-vous à internet avant de sortir'))}
+  try{await SB.auth.signOut()}catch(e){}USER=null;S=null;LIC=null;try{localStorage.removeItem(LKEY);localStorage.removeItem(LKEY+'.lic')}catch(e){}setDirty(false);closeSheet();render()}
+
+/* ---------- réglages en ligne & abonnement ---------- */
+function onlineSettings(){const L=licState();const link=portalLink();
+  const share=`${S.shop.nom} : devis de réparation, téléphones en vente, suivi de votre réparation, ici :\n${link}`;
+  return `<div class="panel"><h3>Lien de votre magasin</h3><div class="small muted">Vos clients y demandent un devis, suivent leur réparation, voient vos téléphones en vente et vous proposent les leurs. Mettez-le dans votre statut WhatsApp, TikTok ou Facebook.</div><div class="linkbox" id="lnk">${esc(link)}</div>
+  <div class="btns"><button class="btn ghost sm" data-act="copy" data-v="${esc(link)}">Copier le lien</button><a class="btn wa sm" href="https://wa.me/?text=${encodeURIComponent(share)}" target="_blank" rel="noopener">${I.wa} Partager</a></div></div>
+  <div class="panel"><div class="sec-h"><h3>Abonnement</h3><button class="btn sm ghost" data-act="abo">Voir</button></div><div class="small muted">${LIC?(L.trial?'Essai gratuit':'Abonné')+' jusqu’au '+dateFr(L.end,{day:'numeric',month:'long',year:'numeric'}):'—'} · code magasin <b>${esc(S.shopId)}</b></div></div>
+  <div class="panel"><h3>Compte</h3><div class="small muted">Connecté : ${esc(userPhone())} · <span id="syncTxt">${syncSt==='ok'?'Sauvegardé en ligne':syncSt==='err'?'Pas encore envoyé : vérifiez internet':'Envoi en cours…'}</span></div>
+  <div class="f"><label for="new-pw">Nouveau mot de passe</label><input id="new-pw" type="password" autocomplete="new-password" placeholder="6 caractères minimum"></div><button class="btn ghost" data-act="chg-pw">Changer le mot de passe</button>
+  <button class="btn danger" data-act="logout">Se déconnecter</button></div>`}
+function aboSheet(){const L=licState();const st=!LIC?'—':L.st==='blocked'?'Abonnement expiré':L.st==='grace'?'Expiré : bloqué dans '+(GRACE_DAYS+L.left)+' j':(L.trial?'Essai gratuit':'Abonné')+' · '+L.left+' j restants';
+  const msg=`Bonjour Seck Apps, je paie l’abonnement Teranga Phone.\nMagasin : ${S.shop.nom}\nCode : ${S.shopId}\nNuméro : ${userPhone()}`;
+  sheet('Abonnement',`<div class="panel"><div class="sec-h"><b>${st}</b></div><div class="small muted">Jusqu’au ${dateFr(L.end,{day:'numeric',month:'long',year:'numeric'})}</div>
+  <div class="money" style="grid-template-columns:1fr"><div><b>${fmt(ABO_PRIX)}</b><span>par mois</span></div></div>
+  <div class="small">1. Envoyez ${fmt(ABO_PRIX)} par <b>Wave</b> ou <b>Orange Money</b> au <b>${SECK_PAY}</b>.<br>2. Envoyez la capture sur WhatsApp avec votre code magasin <b>${esc(S.shopId)}</b>.<br>3. Appuyez sur « J’ai payé : vérifier ».</div>
+  <a class="btn wa" href="${waLink(SECK_WA,msg)}" target="_blank" rel="noopener">${I.wa} WhatsApp Seck Apps</a><button class="btn gold" data-act="abo-check">J’ai payé : vérifier mon abonnement</button>
+  <div class="note">Si l’abonnement n’est pas payé, 3 jours après la fin l’app se bloque : vous voyez vos données mais vous ne pouvez plus modifier, et la page clients se ferme. Tout revient dès le paiement.</div></div>`)}
+
+/* ---------- page clients (lien ?a=) ---------- */
+async function portalBoot(){SB=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:false,autoRefreshToken:false,storageKey:'terangaPhone.portal'}});
+  let r;try{r=await SB.rpc('phone_public',{p_shop:PORTAL})}catch(e){r={error:e}}
+  BOOT=false;
+  if(r.error){PERR=errTxt(r.error);return render()}
+  if(!r.data){PERR='Ce magasin est introuvable. Vérifiez le lien.';return render()}
+  PUB=r.data;try{document.title=PUB.nom;const mt=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(mt)mt.setAttribute('content',PUB.nom)}catch(e){}
+  S={v:1,shop:{nom:PUB.nom||'Magasin',tel:PUB.tel||'',ville:PUB.ville||'',adresse:PUB.adresse||'',activite:PUB.activite||'tout',garantie:PUB.garantie??30},
+     telephones:(PUB.telephones||[]).map(t=>({...t,photos:t.photos&&t.photos.length?t.photos:(t.photo?[t.photo]:[])})),
+     equipe:[],clients:[],reparations:[],pieces:[],ventes:[],demandes:[]};
+  mode='client';view='c-direct';
+  try{PCRED=JSON.parse(localStorage.getItem(PKEY)||'null')}catch(e){}
+  if(PCRED&&await portalLoad(PCRED,true))view='c-accueil';
+  render();
+  if(TICKET&&S.shop.activite!=='vente'&&view!=='c-accueil')cSuivi(TICKET)}
+async function portalLoad(cred,silent){let r;try{r=await SB.rpc('phone_client',{p_shop:PORTAL,p_phone:cred.tel,p_code:cred.code})}catch(e){r={error:e}}
+  if(r.error){const m=String(r.error.message||'');if(/code incorrect/i.test(m)){PCRED=null;try{localStorage.removeItem(PKEY)}catch(e){}}
+    if(!silent)toast(tr(/code incorrect/i.test(m)?'Numéro ou code incorrect':/inactif/i.test(m)?'Espace fermé pour le moment':'Pas de connexion internet : réessayez'));return false}
+  PCRED=cred;try{localStorage.setItem(PKEY,JSON.stringify(cred))}catch(e){}
+  const d=r.data;S.clients=[{id:d.client.id,nom:d.client.nom||'',tel:d.client.tel||''}];viewAs=d.client.id;
+  S.reparations=(d.reparations||[]).map(x=>({...x,clientId:d.client.id,pannes:Array.isArray(x.pannes)?x.pannes:[],paiements:[{montant:num(x.paye)}],pieces:[],photos:[]}));
+  S.ventes=(d.ventes||[]).map(x=>({...x,clientId:d.client.id,lignes:Array.isArray(x.lignes)?x.lignes:[],paiements:[{montant:num(x.paye)}]}));
+  S.demandes=(d.demandes||[]).map(rowDem);return true}
+function portalLogin(){return `<div class="hello"><div class="lbl">${esc(S.shop.nom)}</div><h1>Mon espace client</h1></div>
+  <div class="panel"><p class="small" style="margin:0">Entrez votre numéro et le <b>code</b> que le magasin vous a donné. Vous verrez toutes vos réparations, vos achats et vos messages.</p>
+  <div class="f"><label for="pl-tel">Numéro de téléphone</label><input id="pl-tel" inputmode="tel" autocomplete="tel" placeholder="77 000 00 00"></div>
+  <div class="f"><label for="pl-code">Code</label><input id="pl-code" inputmode="numeric" maxlength="6" placeholder="4 chiffres"></div>
+  <button class="btn block" data-act="pl-go">Entrer</button></div>
+  <div class="panel"><b>Pas de code ?</b><span class="small muted">Pas besoin de code pour demander un devis, suivre une réparation avec le N° du reçu, acheter ou vendre un téléphone.</span><button class="btn gold" data-act="tab" data-v="c-direct">Sans code : envoyer au magasin</button></div>`}
+const DONE={devis:['Demande envoyée','Le magasin a reçu votre panne. Il vous envoie le prix sur WhatsApp au '],vente:['Proposition envoyée','Le magasin regarde votre téléphone et vous fait une offre sur WhatsApp au '],achat:['Demande envoyée','Le magasin a reçu votre demande. Il vous répond sur WhatsApp au '],question:['Question envoyée','Le magasin a reçu votre question. Il vous répond sur WhatsApp au ']};
+function sentSheet(d){const [t,m]=DONE[d.type]||DONE.question;const resume=demSummary(d);
+  sheet(t,`<div class="panel"><b>Merci ${esc(d.nomV)} !</b><div>${esc(m)}${esc(d.telV)}.</div>${S.shop.tel?`<a class="btn wa" href="${waLink(S.shop.tel,'Bonjour '+S.shop.nom+', je viens de vous envoyer sur votre page : '+resume+'. Mon nom : '+d.nomV+'.')}" target="_blank" rel="noopener">${I.wa} Écrire aussi sur WhatsApp</a>`:''}<button class="btn ghost" data-act="close">Fermer</button></div>`)}
+async function sendDem(d,btn){const x=d.data||{};const extra=x.photosLocal||[];delete x.photosLocal;
+  if(!PORTAL){x.photos=[d.photo,...extra].filter(Boolean);S.demandes.push(d);save();closeSheet();if(d.clientId){view='c-messages';render();return toast(tr('Envoyé au magasin'))}render();return sentSheet(d)}
+  if(btn){btn.disabled=true;btn.textContent=tr('Envoi…')}
+  const fail=t=>{if(btn){btn.disabled=false;btn.textContent=tr('Réessayer')}toast(tr(t))};
+  const up=async u=>u&&u.startsWith('data:')?await upPhoto(u,'demandes/'+PORTAL):u;
+  let photo=await up(d.photo);if(d.photo&&!photo)return fail('La photo n’est pas partie : vérifiez internet');
+  const ph=[];for(const u of extra){const v=await up(u);if(v)ph.push(v)}x.photos=[photo,...ph].filter(Boolean);
+  let r;try{r=d.clientId
+    ?await SB.rpc('phone_client_send',{p_shop:PORTAL,p_phone:PCRED.tel,p_code:PCRED.code,p_type:d.type,p_texte:d.texte||'',p_photo:photo||'',p_data:x})
+    :await SB.rpc('phone_visiteur_send',{p_shop:PORTAL,p_nom:d.nomV,p_phone:d.telV,p_type:d.type,p_texte:d.texte||'',p_photo:photo||'',p_data:x})}catch(e){r={error:e}}
+  if(r.error){if(btn){btn.disabled=false;btn.textContent=tr('Réessayer')}return toast(errTxt(r.error))}
+  if(d.clientId){await portalLoad(PCRED,true);closeSheet();view='c-messages';render();return toast(tr('Envoyé au magasin'))}
+  closeSheet();sentSheet(d)}
+/* ---------- écran d'accueil du téléphone ---------- */
+const IS_IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const IS_APP=(()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}})();
+function a2hs(){if(!ONLINE||IS_APP)return '';try{if(localStorage.getItem('terangaPhone.a2hs'+PORTAL)==='1')return ''}catch(e){}
+  const steps=IS_IOS?'<span>1. Ouvrez ce lien dans <b>Safari</b>.</span><span>2. Appuyez sur <b>Partager</b> (carré avec une flèche).</span><span>3. Choisissez <b>« Sur l’écran d’accueil »</b>, puis <b>Ajouter</b>.</span>'
+    :'<span>1. Ouvrez ce lien dans <b>Chrome</b>.</span><span>2. Appuyez sur le menu <b>⋮</b> en haut.</span><span>3. Choisissez <b>« Ajouter à l’écran d’accueil »</b>.</span>';
+  return `<div class="panel" style="border:1.5px dashed var(--gold-line)"><b>${PORTAL?'Gardez le magasin sur votre téléphone':'Mettez l’app sur l’écran d’accueil'}</b><div class="small" style="display:flex;flex-direction:column;gap:3px">${steps}<span>Ensuite, ouvrez toujours ${PORTAL?'le magasin':'l’app'} avec l’icône.</span></div><button class="btn ghost sm" data-act="a2hs-ok" style="align-self:flex-start">C’est fait</button></div>`}
+A['a2hs-ok']=()=>{try{localStorage.setItem('terangaPhone.a2hs'+PORTAL,'1')}catch(e){}render()};
+
+/* ---------- démarrage ---------- */
+async function onlineBoot(){
+  const t0=Date.now();while(!window.supabase&&Date.now()-t0<8000)await new Promise(r=>setTimeout(r,150));
+  if(!window.supabase){BOOT=false;PERR='Pas de connexion internet. Vérifiez et rechargez la page.';S=PORTAL?null:loadLocal();if(S&&!PORTAL){USER={id:S.uid,email:''}}return render()}
+  if(PORTAL)return portalBoot();
+  SB=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'terangaPhone.auth'}});
+  try{const {data}=await SB.auth.getSession();USER=data&&data.session?data.session.user:null}catch(e){USER=null}
+  if(!USER){try{const o=JSON.parse(localStorage.getItem('terangaPhone.auth')||'null');if(o&&o.user&&o.user.id)USER=o.user}catch(e){}}
+  BOOT=false;if(!USER){S=null;return render()}
+  S=loadLocal();if(S&&S.uid&&S.uid!==USER.id)S=null;if(S)S.demandes=[];
+  try{LIC=JSON.parse(localStorage.getItem(LKEY+'.lic')||'null')}catch(e){}
+  if(S)render();
+  await afterLogin();
+  const refresh=async()=>{if(!USER||!SB)return;let ch=false;try{if(!isDirty()&&await cloudCheck()==='down')ch=true}catch(e){}try{if(await loadDem())ch=true}catch(e){}try{await fetchLic()}catch(e){}if(ch&&!document.querySelector('.scrim'))render();else renderHdr()};
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+  setInterval(()=>{if(document.visibilityState==='visible')refresh()},60000);
+  window.addEventListener('online',()=>{if(isDirty())push()})}
+
+Object.assign(A,{
+  authm:e=>{AUTHM=e.dataset.v;render()},
+  auth:e=>doAuth(e),
+  abo:()=>aboSheet(),
+  'abo-check':async e=>{e.disabled=true;e.textContent=tr('Vérification…');try{await fetchLic()}catch(err){}const L=licState();closeSheet();render();toast(tr(L.st==='blocked'?'Pas encore de paiement reçu':'Abonnement à jour'))},
+  copy:e=>{const t=e.dataset.v;try{navigator.clipboard.writeText(t).then(()=>toast(tr('Lien copié')),()=>selLink())}catch(err){selLink()}},
+  'chg-pw':async e=>{const pw=$('#new-pw').value;if(pw.length<6)return toast(tr('6 caractères minimum'));e.disabled=true;const r=await SB.auth.updateUser({password:pw});e.disabled=false;toast(tr(r.error?'Pas changé : vérifiez internet':'Mot de passe changé'))},
+  logout:e=>{if(!outArm){outArm=true;e.textContent=tr('Touchez encore pour sortir');return}outArm=false;doLogout()},
+  'pl-go':async e=>{const tel=val('pl-tel'),code=val('pl-code');if(tel.replace(/\D/g,'').length<9||code.length<4)return toast(tr('Écrivez votre numéro et votre code'));
+    e.disabled=true;e.textContent=tr('Connexion…');const ok=await portalLoad({tel,code});if(!ok){e.disabled=false;e.textContent=tr('Entrer');return}view='c-accueil';render();toast(tr('Bienvenue'))},
+  'pl-out':()=>{PCRED=null;try{localStorage.removeItem(PKEY)}catch(e){}S.clients=[];S.reparations=[];S.ventes=[];S.demandes=[];viewAs=null;view='c-direct';render()},
+});
+function selLink(){const el=$('#lnk');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast(tr('Lien sélectionné : copiez-le'))}
+
+if(ONLINE){render();onlineBoot()}else{load();render()}
+})();
+</script>
+
+</body>
+</html>

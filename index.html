@@ -761,6 +761,7 @@ document.addEventListener('scroll',e=>{const t=e.target;if(!t||t.id!=='galT')ret
 /* ================= Langue : français + Wolof ================= */
 let LANG=(()=>{try{return localStorage.getItem('terangaPhone.lang')==='wo'?'wo':'fr'}catch(e){return 'fr'}})();
 const WO={
+"Mot de passe oublié ?":"Fàtte nga sa baatu jàll ?","Supprimer mon compte":"Far sama kont","Seck Apps vous envoie un nouveau mot de passe sur WhatsApp":"Seck Apps dina la yónnee baatu jàll bu bees ci WhatsApp","Attention : tout sera effacé pour toujours.":"Moytul : lépp dinañu ko far ba fàww.","Pour confirmer, écrivez SUPPRIMER":"Ngir dëggal, bindal SUPPRIMER","Supprimer mon compte pour toujours":"Far sama kont ba fàww","Compte supprimé":"Far nañu kont bi","Suppression…":"Mangi far…",
 "Prix à discuter":"Njëg bi dañu koy waxtaan","Prix minimum (secret, pour discuter)":"Njëg bu gën a suufe (sutura, ngir waxaale)","Votre offre (F) · facultatif, le prix se discute":"Sa njëg (F) · njëg bi dañu koy waxaale","Votre prix pour la réparation (F)":"Sa njëg ngir defar bi (F)","Votre offre pour son téléphone (F)":"Li ngay jox ci telefonam (F)","Votre prix pour lui (F)":"Sa njëg ngir moom (F)",
 "J’accepte":"Nangu naa","Autre prix":"Beneen njëg","Proposer un autre prix":"Wone beneen njëg","Votre prix (F)":"Sa njëg (F)","Envoyer mon prix":"Yónnee sama njëg","Écrivez votre prix":"Bindal sa njëg","Vous avez répondu à ce prix.":"Tontu nga ci njëg bii.",
 "Le magasin vous envoie le prix dans vos messages.":"Magasin bi dina la yónnee njëg bi ci say bataaxal.","Le magasin vous envoie le prix sur WhatsApp.":"Magasin bi dina la yónnee njëg bi ci WhatsApp.",
@@ -929,7 +930,7 @@ function vLogin(){const su=AUTHM==='signup';
   <div class="f"><label for="au-tel">Numéro de téléphone</label><input id="au-tel" inputmode="tel" autocomplete="username" placeholder="77 000 00 00"></div>
   <div class="f"><label for="au-pw">Mot de passe</label><input id="au-pw" type="password" autocomplete="${su?'new-password':'current-password'}" placeholder="6 caractères minimum"></div>
   ${su?'<div class="f"><label for="au-pw2">Répéter le mot de passe</label><input id="au-pw2" type="password" autocomplete="new-password"></div><div class="note">Notez bien votre mot de passe : il faudra le même sur un nouveau téléphone.</div>':''}
-  <button class="btn block" data-act="auth" id="au-btn">${su?'Créer mon magasin':'Se connecter'}</button><div class="small bad" id="au-msg" role="status"></div></div>
+  <button class="btn block" data-act="auth" id="au-btn">${su?'Créer mon magasin':'Se connecter'}</button><div class="small bad" id="au-msg" role="status"></div>${su?'':'<button class="btn ghost sm" data-act="pw-forgot" style="align-self:center">Mot de passe oublié ?</button>'}</div>
   <p class="note" style="text-align:center">Besoin d’aide ? WhatsApp Seck Apps : ${SECK_WA}</p>`}
 async function doAuth(btn){const su=AUTHM==='signup',ph=phoneDigits(val('au-tel')),pw=$('#au-pw').value;const say=t=>{const m=$('#au-msg');if(m)m.textContent=tr(t)};
   if(ph.length<12)return say('Numéro de téléphone invalide');if(pw.length<6)return say('Le mot de passe doit avoir au moins 6 caractères');
@@ -957,7 +958,7 @@ function onlineSettings(){const L=licState();const link=portalLink();
   <div class="panel"><div class="sec-h"><h3>Abonnement</h3><button class="btn sm ghost" data-act="abo">Voir</button></div><div class="small muted">${LIC?(L.trial?'Essai gratuit':'Abonné')+' jusqu’au '+dateFr(L.end,{day:'numeric',month:'long',year:'numeric'}):'—'} · code magasin <b>${esc(S.shopId)}</b></div></div>
   <div class="panel"><h3>Compte</h3><div class="small muted">Connecté : ${esc(userPhone())} · <span id="syncTxt">${syncSt==='ok'?'Sauvegardé en ligne':syncSt==='err'?'Pas encore envoyé : vérifiez internet':'Envoi en cours…'}</span></div>
   <div class="f"><label for="new-pw">Nouveau mot de passe</label><input id="new-pw" type="password" autocomplete="new-password" placeholder="6 caractères minimum"></div><button class="btn ghost" data-act="chg-pw">Changer le mot de passe</button>
-  <button class="btn danger" data-act="logout">Se déconnecter</button></div>`}
+  <button class="btn danger" data-act="logout">Se déconnecter</button><button class="btn ghost sm" data-act="del-acc" style="color:var(--bad);align-self:flex-start">Supprimer mon compte</button></div>`}
 function aboSheet(){const L=licState();const st=!LIC?'—':L.st==='blocked'?'Abonnement expiré':L.st==='grace'?'Expiré : bloqué dans '+(GRACE_DAYS+L.left)+' j':(L.trial?'Essai gratuit':'Abonné')+' · '+L.left+' j restants';
   const msg=`Bonjour Seck Apps, je paie l’abonnement Teranga Phone.\nMagasin : ${S.shop.nom}\nCode : ${S.shopId}\nNuméro : ${userPhone()}`;
   sheet('Abonnement',`<div class="panel"><div class="sec-h"><b>${st}</b></div><div class="small muted">Jusqu’au ${dateFr(L.end,{day:'numeric',month:'long',year:'numeric'})}</div>
@@ -1051,6 +1052,20 @@ Object.assign(A,{
   'pl-out':()=>{PCRED=null;try{localStorage.removeItem(PKEY)}catch(e){}S.clients=[];S.reparations=[];S.ventes=[];S.demandes=[];viewAs=null;view='c-direct';render()},
 });
 function selLink(){const el=$('#lnk');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast(tr('Lien sélectionné : copiez-le'))}
+
+const APP_NAME='Teranga Phone';
+Object.assign(A,{
+  'pw-forgot':()=>{const ph=val('au-tel');window.open(waLink(SECK_WA,`Bonjour Seck Apps, j’ai oublié mon mot de passe ${APP_NAME}.\nMon numéro : ${ph||'…'}`),'_blank','noopener');toast(tr('Seck Apps vous envoie un nouveau mot de passe sur WhatsApp'))},
+  'del-acc':()=>sheet('Supprimer mon compte',`<div class="panel"><b>${tr('Attention : tout sera effacé pour toujours.')}</b><div class="small">${tr('Vos clients, vos données, vos photos et votre abonnement. On ne peut pas revenir en arrière.')}</div><div class="small">${tr('Si vous voulez juste faire une pause, ne supprimez pas : arrêtez de payer, vos données restent gardées.')}</div>
+    <div class="f"><label for="da-ok">${tr('Pour confirmer, écrivez SUPPRIMER')}</label><input id="da-ok" autocomplete="off" autocapitalize="characters"></div>
+    <button class="btn danger" data-act="del-acc-go">${tr('Supprimer mon compte pour toujours')}</button></div>`),
+  'del-acc-go':async e=>{if(val('da-ok').toUpperCase()!=='SUPPRIMER')return toast(tr('Écrivez SUPPRIMER pour confirmer'));e.disabled=true;e.textContent=tr('Suppression…');
+    
+    let r;try{r=await SB.rpc('seck_supprimer_mon_compte')}catch(err){r={error:err}}
+    if(r.error){e.disabled=false;e.textContent=tr('Supprimer mon compte pour toujours');return toast(errTxt(r.error))}
+    try{await SB.auth.signOut()}catch(err){}USER=null;S=null;LIC=null;try{Object.keys(localStorage).filter(k=>k.startsWith(LKEY)).forEach(k=>localStorage.removeItem(k))}catch(err){}
+    $('#sheetRoot').innerHTML='';document.body.style.overflow='';render();toast(tr('Compte supprimé'))},
+});
 
 if(ONLINE){render();onlineBoot()}else{load();render()}
 })();
